@@ -5,7 +5,7 @@ Magic Leap Toolkit is for Magic Leap developers working in Unity® Software with
  
 ## Getting Started
 
-This guidance assumes you have set up your computer for Magic Leap development using Unity. For instructions on how to get started with the toolkit on your computer, see [Magic Leap Toolkit](magic-leap-toolkit-overview).
+This guidance assumes you have set up your computer for Magic Leap development using Unity. For instructions on how to get started with the toolkit on your computer, see [Magic Leap Toolkit](https://creator.magicleap.com/learn/guides/magic-leap-toolkit-overview).
 
 
 ## Licensing
