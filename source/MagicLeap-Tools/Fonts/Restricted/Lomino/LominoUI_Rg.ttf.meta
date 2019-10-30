@@ -1,0 +1,34 @@
+fileFormatVersion: 2
+guid: e6d877a61727f4697824be49474f95cf
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 80
+  forceTextureCase: 0
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Lomino UI
+  fontNames:
+  - Lomino UI
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 255aa0b21fd34438c8cf1f5c41faf70a, type: 3}
+  - {fileID: 12800000, guid: d01f57e3b1c7049398189a438567be35, type: 3}
+  - {fileID: 12800000, guid: d97a5834c113f42438ee03444c7e9e69, type: 3}
+  - {fileID: 12800000, guid: 02dd8507b7e274278b24aa92bb4dc6fc, type: 3}
+  - {fileID: 12800000, guid: bf4597f856b6042409bd12dc70314e46, type: 3}
+  - {fileID: 12800000, guid: ca812019430bf44398c71d9ede63d9bd, type: 3}
+  - {fileID: 12800000, guid: 80e5c3491c16848f7835b3a6870ec34b, type: 3}
+  - {fileID: 12800000, guid: 5c442a594f4004349b067145e8e1f519, type: 3}
+  - {fileID: 12800000, guid: 251db0cae51894329a76592cda7bc472, type: 3}
+  - {fileID: 12800000, guid: b2c154cb2536349bf9e4af4da80e3755, type: 3}
+  - {fileID: 12800000, guid: df1b6bec3527a4f8d8021ac1e75138cb, type: 3}
+  - {fileID: 12800000, guid: b8990e7e15d5e49fcb0ba074cd5f98db, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
