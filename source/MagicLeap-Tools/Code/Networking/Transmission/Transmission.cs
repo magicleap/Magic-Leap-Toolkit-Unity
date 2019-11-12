@@ -584,9 +584,20 @@ namespace MagicLeapTools
             TransmissionRoot.Add(NetworkUtilities.MyAddress);
 
             //establish socket:
-            _udpClient = new UdpClient(Instance.port);
-            _udpClient.Client.SendBufferSize = Instance.bufferSize;
-            _udpClient.Client.ReceiveBufferSize = Instance.bufferSize;
+            bool socketOpen = false;
+            while (!socketOpen)
+            {
+                try
+                {
+                    _udpClient = new UdpClient(Instance.port);
+                    _udpClient.Client.SendBufferSize = Instance.bufferSize;
+                    _udpClient.Client.ReceiveBufferSize = Instance.bufferSize;
+                    socketOpen = true;
+                }
+                catch (Exception)
+                {
+                }
+            }
 
             //establish receive thread:
             _receiveThreadAlive = true;
