@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 //
 // Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
@@ -9,23 +9,23 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-#if PLATFORM_LUMIN
 using UnityEngine.XR.MagicLeap;
-#endif
 
 namespace MagicLeapTools
 {
     public class ControlInput : MonoBehaviour
     {
 #if PLATFORM_LUMIN
+        //Public Enum:
+        public enum ControlHandedness {Any, Left, Right };
+
         //Public Variables:
         [Tooltip("Which hand?")]
-        public MLInput.Hand handedness;
+        public ControlHandedness handedness;
         [Tooltip("Match transform to control?")]
         public bool followControl;
 
         //Events:
-        [Space]
         /// <summary>
         /// Fired when a control is connected.
         /// </summary>
@@ -130,7 +130,7 @@ namespace MagicLeapTools
         /// Fired when a tap begins and ends quickly and in a similar location.
         /// </summary>
         public TouchpadGestureDirectionEvent OnTapped;
-
+        
         //Public Properties:
         /// <summary>
         /// Location of the control.
@@ -262,9 +262,11 @@ namespace MagicLeapTools
         private readonly float _triggerHoldDuration = 2;
         private readonly float _bumperHoldDuration = 2;
         private readonly float _touchHoldDuration = 2;
+        private readonly float _minForceDelta = 0.01f;
         private bool _wasForceTouched;
         private float _angleAccumulation;
-        private MLInput.Hand _previousHand;
+        private ControlHandedness _previousHand;
+        private Vector4 _activeTouch;
 
         //Init:
         private void Start()
@@ -330,11 +332,28 @@ namespace MagicLeapTools
             for (int i = 0; i < 2; ++i)
             {
                 MLInputController control = MLInput.GetController(i);
-
-                if (control.Type == MLInputControllerType.Control && control.Hand == handedness)
+                if (control.Type == MLInputControllerType.Control)
                 {
-                    Initialize(control);
-                    break;
+                    switch (handedness)
+                    {
+                        case ControlHandedness.Any:
+                            Initialize(control);
+                            break;
+
+                        case ControlHandedness.Left:
+                            if (control.Hand == MLInput.Hand.Left)
+                            {
+                                Initialize(control);
+                            }
+                            break;
+
+                        case ControlHandedness.Right:
+                            if (control.Hand == MLInput.Hand.Right)
+                            {
+                                Initialize(control);
+                            }
+                            break;
+                    }
                 }
             }
         }
@@ -398,6 +417,12 @@ namespace MagicLeapTools
                 transform.rotation = Orientation;
             }
 
+            //touch cache:
+            if (Control.Touch1Active)
+            {
+                _activeTouch = GetTouch1Info();
+            }
+
             //touch down:
             if (!Touch && Control.Touch1Active)
             {
@@ -407,12 +432,9 @@ namespace MagicLeapTools
                 //resets:
                 TouchMoved = false;
                 TouchRadialDelta = 0;
-
-                //current for comparisons:
-                Vector4 tempTouch = GetTouch1Info();
-
+                
                 //double - must be close to last touch and quick enough:
-                float distanceFromLastTouchDown = Vector2.Distance(tempTouch, TouchValue);
+                float distanceFromLastTouchDown = Vector2.Distance(_activeTouch, TouchValue);
                 float durationSinceLastTouch = Time.realtimeSinceStartup - _lastTouchTime;
                 if (distanceFromLastTouchDown <= _maxDoubleTouchDistance && durationSinceLastTouch < _touchDoubleDuration)
                 {
@@ -420,7 +442,7 @@ namespace MagicLeapTools
                 }
 
                 //cache:
-                TouchValue = tempTouch;
+                TouchValue = _activeTouch;
                 _touchBeganValue = TouchValue;
                 _touchBeganTime = Time.realtimeSinceStartup;
                 _lastTouchTime = Time.realtimeSinceStartup;
@@ -431,29 +453,31 @@ namespace MagicLeapTools
             //touch movement:
             if (Touch)
             {
-                //current for comparisons:
-                Vector4 tempTouch = GetTouch1Info();
-
                 //touch force delta tracking:
-                if (tempTouch.z != TouchValue.z)
+                if (_activeTouch.z != TouchValue.z)
                 {
-                    if (tempTouch.z > TouchValue.z)
+                    //pressed enough to be a change?
+                    float delta = Mathf.Abs(_activeTouch.z - TouchValue.z);
+                    if (delta > _minForceDelta)
                     {
-                        //touch is getting stronger:
-                        if (!ForceTouch && tempTouch.z >= _forceTouchDownThreshold)
+                        if (_activeTouch.z > TouchValue.z)
                         {
-                            ForceTouch = true;
-                            _wasForceTouched = true;
-                            OnForceTouchDown?.Invoke();
+                            //touch is getting stronger:
+                            if (!ForceTouch && _activeTouch.z >= _forceTouchDownThreshold)
+                            {
+                                ForceTouch = true;
+                                _wasForceTouched = true;
+                                OnForceTouchDown?.Invoke();
+                            }
                         }
-                    }
-                    else
-                    {
-                        //touch is getting weaker:
-                        if (ForceTouch && tempTouch.z <= _forceTouchUpThreshold)
+                        else
                         {
-                            ForceTouch = false;
-                            OnForceTouchUp?.Invoke();
+                            //touch is getting weaker:
+                            if (ForceTouch && _activeTouch.z <= _forceTouchUpThreshold + _minForceDelta)
+                            {
+                                ForceTouch = false;
+                                OnForceTouchUp?.Invoke();
+                            }
                         }
                     }
                 }
@@ -465,7 +489,7 @@ namespace MagicLeapTools
                     if (!TouchMoved)
                     {
                         //did we initially move far enough?
-                        float movedFromInitialTouchDistance = Vector2.Distance(tempTouch, _touchBeganValue);
+                        float movedFromInitialTouchDistance = Vector2.Distance(_activeTouch, _touchBeganValue);
 
                         if (movedFromInitialTouchDistance > _touchBeganMovingThreshold)
                         {
@@ -479,14 +503,14 @@ namespace MagicLeapTools
                     if (TouchMoved)
                     {
                         //did we have an intentional move?
-                        float movedDistance = Vector2.Distance(TouchValue, tempTouch);
-                        if (TouchValue != tempTouch && movedDistance > 0 && movedDistance > _minTouchMove)
+                        float movedDistance = Vector2.Distance(TouchValue, _activeTouch);
+                        if (TouchValue != _activeTouch && movedDistance > 0 && movedDistance > _minTouchMove)
                         {
                             //moved:
                             OnTouchMove?.Invoke(TouchValue);
 
                             //radial move:
-                            float angleDelta = tempTouch.w - TouchValue.w;
+                            float angleDelta = _activeTouch.w - TouchValue.w;
                             if (OnTouchRadialMove != null)
                             {
                                 TouchRadialDelta = angleDelta;
@@ -494,7 +518,7 @@ namespace MagicLeapTools
                             }
 
                             //cache:
-                            TouchValue = tempTouch;
+                            TouchValue = _activeTouch;
                         }
                     }
                 }
@@ -506,7 +530,7 @@ namespace MagicLeapTools
                 //status:
                 Touch = false;
                 TouchMoved = false;
-                TouchValue = GetTouch1Info();
+                TouchValue = _activeTouch;
                 StopCoroutine("TouchHold");
 
                 //meta on touch sequence:
@@ -666,9 +690,26 @@ namespace MagicLeapTools
         {
             //we just want to work with the control:
             MLInputController connectedControl = MLInput.GetController(controlId);
-            if (connectedControl.Type == MLInputControllerType.Control && connectedControl.Hand == handedness)
+
+            switch (handedness)
             {
-                Initialize(MLInput.GetController(controlId));
+                case ControlHandedness.Any:
+                    Initialize(MLInput.GetController(controlId));
+                    break;
+
+                case ControlHandedness.Left:
+                    if (connectedControl.Hand == MLInput.Hand.Left)
+                    {
+                        Initialize(MLInput.GetController(controlId));
+                    }
+                    break;
+
+                case ControlHandedness.Right:
+                    if (connectedControl.Hand == MLInput.Hand.Right)
+                    {
+                        Initialize(MLInput.GetController(controlId));
+                    }
+                    break;
             }
         }
 
