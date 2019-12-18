@@ -25,7 +25,7 @@ namespace MagicLeapTools
         [Tooltip("Match transform to control?")]
         public bool followControl;
 
-        //Events:
+        //Events
         /// <summary>
         /// Fired when a control is connected.
         /// </summary>
@@ -400,7 +400,7 @@ namespace MagicLeapTools
                 _previousHand = handedness;
                 GetControl();
             }
-
+            
             //no control?
             if (Control == null)
             {
@@ -574,6 +574,12 @@ namespace MagicLeapTools
                                 else if (swipeAngle > 135 && swipeAngle <= 225)
                                 {
                                     direction = MLInputControllerTouchpadGestureDirection.Down;
+                                }
+
+                                //radial swipe?
+                                if (Control.TouchpadGesture.Type == MLInputControllerTouchpadGestureType.RadialScroll)
+                                {
+                                    direction = Control.TouchpadGesture.Direction;
                                 }
 
                                 OnSwipe?.Invoke(direction);
