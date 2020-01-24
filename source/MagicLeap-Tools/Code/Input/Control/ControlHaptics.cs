@@ -150,7 +150,7 @@ namespace MagicLeapTools
                 return;
             }
 
-            controlInput.Control.StartFeedbackPatternVibe(settings.pattern, settings.instensity);
+            controlInput.Control.StartFeedbackPatternVibe(settings.pattern, settings.intensity);
         }
 #endif
     }
