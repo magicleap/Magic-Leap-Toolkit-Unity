@@ -18,11 +18,11 @@ namespace MagicLeapTools
 #if PLATFORM_LUMIN
         //Public Variables:
         public bool enabled;
-        public MLInputControllerFeedbackPatternVibe pattern;
-        public MLInputControllerFeedbackIntensity instensity;
+        public MLInput.Controller.FeedbackPatternVibe pattern;
+        public MLInput.Controller.FeedbackIntensity instensity;
 
         //Constructors:
-        public HapticSetting(bool enabled, MLInputControllerFeedbackPatternVibe pattern, MLInputControllerFeedbackIntensity intensity)
+        public HapticSetting(bool enabled, MLInput.Controller.FeedbackPatternVibe pattern, MLInput.Controller.FeedbackIntensity intensity)
         {
             this.enabled = enabled;
             this.pattern = pattern;

@@ -42,9 +42,9 @@ namespace MagicLeapTools
         private const float SendDuration = 1;
         private const int QueryCount = 50;
         private const int OutboundCount = 10;
-        private static List<MLPCF> _localPCFs = new List<MLPCF>();
-        private List<MLPCF> _localPCFData = new List<MLPCF>();
-        private Dictionary<string, MLPCF> _localPCFReferences = new Dictionary<string, MLPCF>();
+        private static List<MLPersistentCoordinateFrames.PCF> _localPCFs = new List<MLPersistentCoordinateFrames.PCF>();
+        private List<MLPersistentCoordinateFrames.PCF> _localPCFData = new List<MLPersistentCoordinateFrames.PCF>();
+        private Dictionary<string, MLPersistentCoordinateFrames.PCF> _localPCFReferences = new Dictionary<string, MLPersistentCoordinateFrames.PCF>();
         private List<PCFMessage> _outboundPCFs = new List<PCFMessage>();
         private Dictionary<string, SpatialAlignmentHistory> _alignmentHistory = new Dictionary<string, SpatialAlignmentHistory>();
         private Transform _transformHelper;
@@ -93,7 +93,7 @@ namespace MagicLeapTools
             //query until we get PCFs:
             while (_localPCFs.Count == 0)
             {
-                MLPersistentCoordinateFrames.GetAllPCFs(out _localPCFs, QueryCount);
+                MLPersistentCoordinateFrames.FindAllPCFs(out _localPCFs, QueryCount);
                 yield return null;
             }
 
@@ -122,12 +122,13 @@ namespace MagicLeapTools
             _outboundPCFs.Clear();
 
             //get pcfs:
-            MLPersistentCoordinateFrames.GetAllPCFs(out _localPCFs, QueryCount);
+            MLPersistentCoordinateFrames.FindAllPCFs(out _localPCFs, QueryCount);
 
             //request poses:
             foreach (var item in _localPCFs)
             {
-                MLPersistentCoordinateFrames.GetPCFPosition(item, HandlePCFPoseRetrieval);
+                item.Update();
+                HandlePCFPoseRetrieval(item);
             }
         }
 
@@ -142,7 +143,7 @@ namespace MagicLeapTools
             }
         }
 
-        private void HandlePCFPoseRetrieval(MLResult result, MLPCF pcf)
+        private void HandlePCFPoseRetrieval(MLPersistentCoordinateFrames.PCF pcf)
         {
             //save results:
             _localPCFData.Add(pcf);
@@ -157,7 +158,7 @@ namespace MagicLeapTools
                 for (int i = 0; i < Mathf.Min(OutboundCount, _localPCFData.Count); i++)
                 {
                     //find offsets:
-                    _transformHelper.SetPositionAndRotation(_localPCFData[i].Position, _localPCFData[i].Orientation);
+                    _transformHelper.SetPositionAndRotation(_localPCFData[i].Position, _localPCFData[i].Rotation);
                     Vector3 positionOffset = _transformHelper.InverseTransformPoint(Vector3.zero);
                     Quaternion rotationOffset = Quaternion.Inverse(_transformHelper.rotation) * Quaternion.LookRotation(Vector3.forward);
 
@@ -184,7 +185,7 @@ namespace MagicLeapTools
                 }
 
                 //get peer root offset from this PCF:
-                _transformHelper.SetPositionAndRotation(_localPCFReferences[CFUID].Position, _localPCFReferences[CFUID].Orientation);
+                _transformHelper.SetPositionAndRotation(_localPCFReferences[CFUID].Position, _localPCFReferences[CFUID].Rotation);
                 Vector3 position = _transformHelper.TransformPoint(offset.position);
                 Quaternion rotation = _transformHelper.rotation * offset.rotation;
 

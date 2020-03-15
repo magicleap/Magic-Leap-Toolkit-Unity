@@ -16,7 +16,7 @@ namespace MagicLeapTools
 {
 #if PLATFORM_LUMIN
     [System.Serializable]
-    public class TouchpadGestureDirectionEvent : UnityEvent<MLInputControllerTouchpadGestureDirection>
+    public class TouchpadGestureDirectionEvent : UnityEvent<MLInput.Controller.TouchpadGesture.GestureDirection>
     {
     }
 #endif

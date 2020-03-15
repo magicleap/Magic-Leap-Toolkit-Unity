@@ -40,15 +40,15 @@ namespace MagicLeapTools
             //refs:
             controlInput = GetComponent<ControlInput>();
 
-            triggerDown = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.Click, MLInputControllerFeedbackIntensity.High);
-            touchDown = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.Click, MLInputControllerFeedbackIntensity.Medium);
-            touchUp = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.Click, MLInputControllerFeedbackIntensity.Low);
-            forceTouchDown = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.ForceDown, MLInputControllerFeedbackIntensity.High);
-            forceTouchUp = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.ForceUp, MLInputControllerFeedbackIntensity.High);
-            radialMove = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.Tick, MLInputControllerFeedbackIntensity.Low);
-            triggerHold = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.ForceDown, MLInputControllerFeedbackIntensity.High);
-            bumperHold = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.ForceDown, MLInputControllerFeedbackIntensity.High);
-            touchHold = new HapticSetting(true, MLInputControllerFeedbackPatternVibe.ForceDown, MLInputControllerFeedbackIntensity.High);
+            triggerDown    = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click,     MLInput.Controller.FeedbackIntensity.High);
+            touchDown      = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click,     MLInput.Controller.FeedbackIntensity.Medium);
+            touchUp        = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click,     MLInput.Controller.FeedbackIntensity.Low);
+            forceTouchDown = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
+            forceTouchUp   = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceUp,   MLInput.Controller.FeedbackIntensity.High);
+            radialMove     = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Tick,      MLInput.Controller.FeedbackIntensity.Low);
+            triggerHold    = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
+            bumperHold     = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
+            touchHold      = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
         }
 
         //Flow:
@@ -132,7 +132,7 @@ namespace MagicLeapTools
         }
 
         //Public Methods:
-        public void StartHaptic(MLInputControllerFeedbackPatternVibe vibe, MLInputControllerFeedbackIntensity intensity)
+        public void StartHaptic(MLInput.Controller.FeedbackPatternVibe vibe, MLInput.Controller.FeedbackIntensity intensity)
         {
             controlInput.Control.StartFeedbackPatternVibe(vibe, intensity);
         }
@@ -150,7 +150,7 @@ namespace MagicLeapTools
                 return;
             }
 
-            controlInput.Control.StartFeedbackPatternVibe(settings.pattern, settings.intensity);
+            controlInput.Control.StartFeedbackPatternVibe(settings.pattern, settings.instensity);
         }
 #endif
     }

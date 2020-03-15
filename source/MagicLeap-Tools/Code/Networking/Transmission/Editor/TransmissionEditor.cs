@@ -31,8 +31,8 @@ namespace MagicLeapTools
         //Inspector GUI:
         public override void OnInspectorGUI()
         {
-            EditorUtilities.ComponentRequired(typeof(PrivilegeRequester));
-            EditorUtilities.SensitivePrivilegeRequired(MLRuntimeRequestPrivilegeId.LocalAreaNetwork);
+            EditorUtilities.ComponentRequired(typeof(MLPrivilegeRequesterBehavior));
+            EditorUtilities.SensitivePrivilegeRequired(MLPrivileges.RuntimeRequestId.LocalAreaNetwork);
 
             DrawDefaultInspector();
         }

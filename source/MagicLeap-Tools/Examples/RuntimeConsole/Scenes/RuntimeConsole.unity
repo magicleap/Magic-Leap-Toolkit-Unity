@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -216,7 +217,7 @@ MonoBehaviour:
   surfaceOffset: 0.07
   allowedDistance: 0
   minimumScale: 0.5
-  arrivalSpeed: 10
+  arrivalSpeed: 7
   flipForward: 0
   matchGravity: 1
   flatLocation: 0
@@ -242,6 +243,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 80807602}
     m_Modifications:
+    - target: {fileID: 5619764785158044116, guid: 4b83d5952ef78964a987c932f7375418,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619764785158044116, guid: 4b83d5952ef78964a987c932f7375418,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5619764785288450835, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
       propertyPath: m_Name
@@ -300,16 +311,6 @@ PrefabInstance:
     - target: {fileID: 5619764785288450844, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5619764785158044116, guid: 4b83d5952ef78964a987c932f7375418,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5619764785158044116, guid: 4b83d5952ef78964a987c932f7375418,
-        type: 3}
-      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5619764785477124592, guid: 4b83d5952ef78964a987c932f7375418,
@@ -414,8 +415,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: e6d877a61727f4697824be49474f95cf, type: 3}
     m_FontSize: 1
@@ -434,11 +433,12 @@ MonoBehaviour:
     below.
 
 
-    Tap the bottom or top of the Control touchpad to scroll and hold a long press
-    (2 seconds) on the touchpad to jump back to the latest.
+    Tap the bottom or top of the Control touchpad to scroll and hold
+    a long press (2 seconds) on the touchpad to jump back to the latest.
 
 
-    Holding down the Control Bumper (2 seconds) toggles visibility of the console.'
+    Holding
+    down the Control Bumper (2 seconds) toggles visibility of the console.'
 --- !u!222 &573071391
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -533,16 +533,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114301182059694268, guid: b6af97b52b3429641aa904690975fa80,
-        type: 3}
-      propertyPath: m_LevelOfDetail
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 23288401035578246, guid: b6af97b52b3429641aa904690975fa80,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 5f7a8f815117efc428db87c9080e7cd0, type: 2}
+    - target: {fileID: 114301182059694268, guid: b6af97b52b3429641aa904690975fa80,
+        type: 3}
+      propertyPath: m_LevelOfDetail
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6af97b52b3429641aa904690975fa80, type: 3}
 --- !u!1001 &708704093
