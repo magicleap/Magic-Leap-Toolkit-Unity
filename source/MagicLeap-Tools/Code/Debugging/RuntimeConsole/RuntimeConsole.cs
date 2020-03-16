@@ -170,15 +170,15 @@ namespace MagicLeapTools
         }
 
         //Event Handlers:
-        private void HandleTap(MLInputControllerTouchpadGestureDirection Direction)
+        private void HandleTap(MLInput.Controller.TouchpadGesture.GestureDirection Direction)
         {
             switch (Direction)
             {
-                case MLInputControllerTouchpadGestureDirection.Up:
+                case MLInput.Controller.TouchpadGesture.GestureDirection.Up:
                     ScrollUp();
                     break;
 
-                case MLInputControllerTouchpadGestureDirection.Down:
+                case MLInput.Controller.TouchpadGesture.GestureDirection.Down:
                     ScrollDown();
                     break;
             }

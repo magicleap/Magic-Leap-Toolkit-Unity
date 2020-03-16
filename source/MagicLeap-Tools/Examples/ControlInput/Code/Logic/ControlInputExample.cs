@@ -181,12 +181,12 @@ public class ControlInputExample : MonoBehaviour
         AddEvent("Force Touch Up");
     }
 
-    private void HandleSwipe(MLInputControllerTouchpadGestureDirection value)
+    private void HandleSwipe(MLInput.Controller.TouchpadGesture.GestureDirection value)
     {
         AddEvent("Swipe " + value);
     }
 
-    private void HandleTapped(MLInputControllerTouchpadGestureDirection value)
+    private void HandleTapped(MLInput.Controller.TouchpadGesture.GestureDirection value)
     {
         AddEvent("Tap " + value);
     }

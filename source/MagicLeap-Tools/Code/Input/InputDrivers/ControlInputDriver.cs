@@ -96,23 +96,23 @@ namespace MagicLeapTools
             RadialDrag(angleDelta);
         }
 
-        private void HandleTouchPad(MLInputControllerTouchpadGestureDirection direction)
+        private void HandleTouchPad(MLInput.Controller.TouchpadGesture.GestureDirection direction)
         {
             switch (direction)
             {
-                case MLInputControllerTouchpadGestureDirection.Left:
+                case MLInput.Controller.TouchpadGesture.GestureDirection.Left:
                     Left();
                     break;
 
-                case MLInputControllerTouchpadGestureDirection.Right:
+                case MLInput.Controller.TouchpadGesture.GestureDirection.Right:
                     Right();
                     break;
 
-                case MLInputControllerTouchpadGestureDirection.Up:
+                case MLInput.Controller.TouchpadGesture.GestureDirection.Up:
                     Up();
                     break;
 
-                case MLInputControllerTouchpadGestureDirection.Down:
+                case MLInput.Controller.TouchpadGesture.GestureDirection.Down:
                     Down();
                     break;
             }

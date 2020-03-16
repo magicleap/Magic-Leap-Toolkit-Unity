@@ -30,16 +30,16 @@ namespace MagicLeapTools
         }
 
 #if PLATFORM_LUMIN
-        public static void SensitivePrivilegeRequired(MLRuntimeRequestPrivilegeId privilege)
+        public static void SensitivePrivilegeRequired(MLPrivileges.RuntimeRequestId privilege)
         {
-            PrivilegeRequester privilegeRequester = GameObject.FindObjectOfType<PrivilegeRequester>();
+            MLPrivilegeRequesterBehavior privilegeRequester = GameObject.FindObjectOfType<MLPrivilegeRequesterBehavior>();
             if (privilegeRequester != null)
             {
                 if (privilegeRequester.Privileges == null)
                 {
                     InspectorInfoBox($"This component requires a sensitive privilige.  Include {privilege} in your instance of PrivilegeRequester and make sure the equivalent privilege has been added to your manifest.", MessageType.Error);
                 }
-                else if (Array.IndexOf<MLRuntimeRequestPrivilegeId>(privilegeRequester.Privileges, privilege) == -1)
+                else if (Array.IndexOf<MLPrivileges.RuntimeRequestId>(privilegeRequester.Privileges, privilege) == -1)
                 {
                     InspectorInfoBox($"This component requires a sensitive privilige.  Include {privilege} in your instance of PrivilegeRequester and make sure the equivalent privilege has been added to your manifest.", MessageType.Error);
                 }

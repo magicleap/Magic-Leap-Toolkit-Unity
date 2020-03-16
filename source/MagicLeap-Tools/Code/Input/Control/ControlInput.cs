@@ -144,7 +144,7 @@ namespace MagicLeapTools
         /// <summary>
         /// A reference to the control.
         /// </summary>
-        public MLInputController Control
+        public MLInput.Controller Control
         {
             get;
             private set;
@@ -331,8 +331,9 @@ namespace MagicLeapTools
         {
             for (int i = 0; i < 2; ++i)
             {
-                MLInputController control = MLInput.GetController(i);
-                if (control.Type == MLInputControllerType.Control)
+               
+                MLInput.Controller control = MLInput.GetController(i);
+                if (control.Type == MLInput.Controller.ControlType.Control)
                 {
                     switch (handedness)
                     {
@@ -358,7 +359,7 @@ namespace MagicLeapTools
             }
         }
 
-        private void Initialize(MLInputController control)
+        private void Initialize(MLInput.Controller control)
         {
             //status:
             Control = control;
@@ -562,24 +563,24 @@ namespace MagicLeapTools
                                 }
 
                                 //determine swipe direction:
-                                MLInputControllerTouchpadGestureDirection direction = MLInputControllerTouchpadGestureDirection.Left;
+                                MLInput.Controller.TouchpadGesture.GestureDirection direction = MLInput.Controller.TouchpadGesture.GestureDirection.Left;
                                 if (swipeAngle > 315 || swipeAngle <= 45)
                                 {
-                                    direction = MLInputControllerTouchpadGestureDirection.Up;
+                                    direction = MLInput.Controller.TouchpadGesture.GestureDirection.Up;
                                 }
                                 else if (swipeAngle > 45 && swipeAngle <= 135)
                                 {
-                                    direction = MLInputControllerTouchpadGestureDirection.Right;
+                                    direction = MLInput.Controller.TouchpadGesture.GestureDirection.Right;
                                 }
                                 else if (swipeAngle > 135 && swipeAngle <= 225)
                                 {
-                                    direction = MLInputControllerTouchpadGestureDirection.Down;
+                                    direction = MLInput.Controller.TouchpadGesture.GestureDirection.Down;
                                 }
 
                                 //radial swipe?
-                                if (Control.TouchpadGesture.Type == MLInputControllerTouchpadGestureType.RadialScroll)
+                                if (Control.CurrentTouchpadGesture.Type == MLInput.Controller.TouchpadGesture.GestureType.RadialScroll)
                                 {
-                                    direction = Control.TouchpadGesture.Direction;
+                                    direction = Control.CurrentTouchpadGesture.Direction;
                                 }
 
                                 OnSwipe?.Invoke(direction);
@@ -595,18 +596,18 @@ namespace MagicLeapTools
                             if (durationFromTouchStart < _maxTapDuration)
                             {
                                 //determine tap location:
-                                MLInputControllerTouchpadGestureDirection direction = MLInputControllerTouchpadGestureDirection.Left;
+                                MLInput.Controller.TouchpadGesture.GestureDirection direction = MLInput.Controller.TouchpadGesture.GestureDirection.Left;
                                 if (TouchValue.w > 315 || TouchValue.w <= 45)
                                 {
-                                    direction = MLInputControllerTouchpadGestureDirection.Up;
+                                    direction = MLInput.Controller.TouchpadGesture.GestureDirection.Up;
                                 }
                                 else if (TouchValue.w > 45 && TouchValue.w <= 135)
                                 {
-                                    direction = MLInputControllerTouchpadGestureDirection.Right;
+                                    direction = MLInput.Controller.TouchpadGesture.GestureDirection.Right;
                                 }
                                 else if (TouchValue.w > 135 && TouchValue.w <= 225)
                                 {
-                                    direction = MLInputControllerTouchpadGestureDirection.Down;
+                                    direction = MLInput.Controller.TouchpadGesture.GestureDirection.Down;
                                 }
 
                                 OnTapped?.Invoke(direction);
@@ -695,7 +696,7 @@ namespace MagicLeapTools
         private void HandleControlConnected(byte controlId)
         {
             //we just want to work with the control:
-            MLInputController connectedControl = MLInput.GetController(controlId);
+            MLInput.Controller connectedControl = MLInput.GetController(controlId);
 
             switch (handedness)
             {
@@ -753,7 +754,7 @@ namespace MagicLeapTools
             OnTriggerUp?.Invoke();
         }
 
-        private void HandleControlButtonDown(byte controlId, MLInputControllerButton button)
+        private void HandleControlButtonDown(byte controlId, MLInput.Controller.Button button)
         {
             //wrong or no control?
             if (Control == null || controlId != Control.Id)
@@ -763,7 +764,7 @@ namespace MagicLeapTools
 
             switch (button)
             {
-                case MLInputControllerButton.Bumper:
+                case MLInput.Controller.Button.Bumper:
                     StartCoroutine("BumperHold");
                     Bumper = true;
                     OnBumperDown?.Invoke();
@@ -777,7 +778,7 @@ namespace MagicLeapTools
                     _lastBumperTime = Time.realtimeSinceStartup;
                     break;
 
-                case MLInputControllerButton.HomeTap:
+                case MLInput.Controller.Button.HomeTap:
                     OnHomeButtonTap?.Invoke();
 
                     //double?
@@ -791,7 +792,7 @@ namespace MagicLeapTools
             }
         }
 
-        private void HandleControlButtonUp(byte controlId, MLInputControllerButton button)
+        private void HandleControlButtonUp(byte controlId, MLInput.Controller.Button button)
         {
             //wrong or no control?
             if (Control == null || controlId != Control.Id)
@@ -801,7 +802,7 @@ namespace MagicLeapTools
 
             switch (button)
             {
-                case MLInputControllerButton.Bumper:
+                case MLInput.Controller.Button.Bumper:
                     StopCoroutine("BumperHold");
                     Bumper = false;
                     OnBumperUp?.Invoke();
