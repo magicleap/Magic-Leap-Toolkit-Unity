@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -40,15 +40,15 @@ namespace MagicLeapTools
             //refs:
             controlInput = GetComponent<ControlInput>();
 
-            triggerDown    = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click,     MLInput.Controller.FeedbackIntensity.High);
-            touchDown      = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click,     MLInput.Controller.FeedbackIntensity.Medium);
-            touchUp        = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click,     MLInput.Controller.FeedbackIntensity.Low);
+            triggerDown = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click, MLInput.Controller.FeedbackIntensity.High);
+            touchDown = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click, MLInput.Controller.FeedbackIntensity.Medium);
+            touchUp = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Click, MLInput.Controller.FeedbackIntensity.Low);
             forceTouchDown = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
-            forceTouchUp   = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceUp,   MLInput.Controller.FeedbackIntensity.High);
-            radialMove     = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Tick,      MLInput.Controller.FeedbackIntensity.Low);
-            triggerHold    = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
-            bumperHold     = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
-            touchHold      = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
+            forceTouchUp = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceUp, MLInput.Controller.FeedbackIntensity.High);
+            radialMove = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.Tick, MLInput.Controller.FeedbackIntensity.Low);
+            triggerHold = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
+            bumperHold = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
+            touchHold = new HapticSetting(true, MLInput.Controller.FeedbackPatternVibe.ForceDown, MLInput.Controller.FeedbackIntensity.High);
         }
 
         //Flow:
@@ -150,7 +150,7 @@ namespace MagicLeapTools
                 return;
             }
 
-            controlInput.Control.StartFeedbackPatternVibe(settings.pattern, settings.instensity);
+            controlInput.Control.StartFeedbackPatternVibe(settings.pattern, settings.intensity);
         }
 #endif
     }

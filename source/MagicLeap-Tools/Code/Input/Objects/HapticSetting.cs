@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -19,14 +19,14 @@ namespace MagicLeapTools
         //Public Variables:
         public bool enabled;
         public MLInput.Controller.FeedbackPatternVibe pattern;
-        public MLInput.Controller.FeedbackIntensity instensity;
+        public MLInput.Controller.FeedbackIntensity intensity;
 
         //Constructors:
         public HapticSetting(bool enabled, MLInput.Controller.FeedbackPatternVibe pattern, MLInput.Controller.FeedbackIntensity intensity)
         {
             this.enabled = enabled;
             this.pattern = pattern;
-            this.instensity = intensity;
+            this.intensity = intensity;
         }
 #endif
     }

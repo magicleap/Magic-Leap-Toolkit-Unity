@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PointerLine
-  m_Shader: {fileID: 4800000, guid: 95f8c951d89bd4c4aa808f6e7eba3134, type: 3}
+  m_Shader: {fileID: 4800000, guid: e170fc46deb64a049a88def8e7cd9226, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -65,6 +65,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _Fade: 1
     - _GOffset: 1
     - _GlossMapScale: 1
     - _Glossiness: 0
@@ -76,7 +77,8 @@ Material:
     - _POffset: 0
     - _Parallax: 0.02
     - _PulseLenght: 1
-    - _PulseLength: 3.75
+    - _PulseLength: 1
+    - _PulseOffset: 0
     - _ROffset: 0.662
     - _ScrollSpeed: -11.8
     - _SmoothnessTextureChannel: 0
@@ -90,5 +92,6 @@ Material:
     - _Color1: {r: 0.41960788, g: 0.58431375, b: 1, a: 1}
     - _ColorB: {r: 0.514151, g: 1, b: 0.883936, a: 1}
     - _ColorG: {r: 0.80031437, g: 0.4009434, b: 1, a: 1}
+    - _ColorP: {r: 1, g: 1, b: 1, a: 1}
     - _ColorR: {r: 0.078431375, g: 1, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}

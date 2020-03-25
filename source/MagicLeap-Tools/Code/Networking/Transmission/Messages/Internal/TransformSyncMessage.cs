@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -69,13 +69,13 @@ namespace MagicLeapTools
             ig = transmissionObject.guid;
 
             //truncate precision:
-            px = Math.Round(transmissionObject.transform.localPosition.x, 3);
-            py = Math.Round(transmissionObject.transform.localPosition.y, 3);
-            pz = Math.Round(transmissionObject.transform.localPosition.z, 3);
-            rx = Math.Round(transmissionObject.transform.localRotation.x, 3);
-            ry = Math.Round(transmissionObject.transform.localRotation.y, 3);
-            rz = Math.Round(transmissionObject.transform.localRotation.z, 3);
-            rw = Math.Round(transmissionObject.transform.localRotation.w, 3);
+            px = Math.Round(transmissionObject.localPosition.x, 3);
+            py = Math.Round(transmissionObject.localPosition.y, 3);
+            pz = Math.Round(transmissionObject.localPosition.z, 3);
+            rx = Math.Round(transmissionObject.rotationOffset.x, 3);
+            ry = Math.Round(transmissionObject.rotationOffset.y, 3);
+            rz = Math.Round(transmissionObject.rotationOffset.z, 3);
+            rw = Math.Round(transmissionObject.rotationOffset.w, 3);
             sx = Math.Round(transmissionObject.transform.localScale.x, 3);
             sy = Math.Round(transmissionObject.transform.localScale.y, 3);
             sz = Math.Round(transmissionObject.transform.localScale.z, 3);

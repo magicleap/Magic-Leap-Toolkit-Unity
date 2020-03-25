@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -77,6 +77,7 @@ namespace MagicLeapTools
             if (target != null)
             {
                 _offset = transform.position - target.position;
+                Debug.Log(_offset + " " + transform.position + " " + target.position);
             }
 
             //sets:
@@ -100,7 +101,7 @@ namespace MagicLeapTools
         {
             //apply dampening which overrides drag:
             _rigidbody.drag = dampening;
-
+            
             //new target:
             if (_previousTarget != target)
             {
@@ -119,7 +120,7 @@ namespace MagicLeapTools
                 }
                 _previousTarget = target;
             }
-
+            
             //pursuit params:
             Vector3 destination = transform.position;
             Vector3 to = Vector3.zero;
@@ -142,6 +143,16 @@ namespace MagicLeapTools
 
             //pursue:
             _rigidbody.AddForce(to * strength);
+        }
+
+        public void SetTarget(Transform t)
+        {
+            target = t;
+        }
+
+        public void RemoveTarget()
+        {
+            target = null;
         }
     }
 }

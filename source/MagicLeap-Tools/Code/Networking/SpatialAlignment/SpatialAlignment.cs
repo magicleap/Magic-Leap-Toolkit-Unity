@@ -1,86 +1,91 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-#if PLATFORM_LUMIN
 using UnityEngine.XR.MagicLeap;
+using UnityEngine.Events;
+#if PLATFORM_LUMIN
+using static UnityEngine.XR.MagicLeap.Native.MagicLeapNativeBindings;
 #endif
-using System.Linq;
 
 namespace MagicLeapTools
 {
     public class SpatialAlignment : MonoBehaviour
     {
-#if PLATFORM_LUMIN
-        //Events
-        /// <summary>
-        /// Fired when a peer aligns with us.
-        /// </summary>
-        public StringEvent OnPeerAligned;
-
-        //Public Variables:
-        public List<string> alignedPeers = new List<string>();
-
         //Public Properties:
         public static bool Localized
         {
-            get
-            {
-                return _localPCFs.Count > 0;
-            }
+            get;
+            private set;
         }
 
+        //Events:
+        public UnityEvent OnLocalized;
+
+#if PLATFORM_LUMIN
         //Private Variables:
-        private const float QueryInterval = 2;
-        private const float SendDuration = 1;
-        private const int QueryCount = 50;
-        private const int OutboundCount = 10;
-        private static List<MLPersistentCoordinateFrames.PCF> _localPCFs = new List<MLPersistentCoordinateFrames.PCF>();
-        private List<MLPersistentCoordinateFrames.PCF> _localPCFData = new List<MLPersistentCoordinateFrames.PCF>();
-        private Dictionary<string, MLPersistentCoordinateFrames.PCF> _localPCFReferences = new Dictionary<string, MLPersistentCoordinateFrames.PCF>();
-        private List<PCFMessage> _outboundPCFs = new List<PCFMessage>();
-        private Dictionary<string, SpatialAlignmentHistory> _alignmentHistory = new Dictionary<string, SpatialAlignmentHistory>();
-        private Transform _transformHelper;
-        private Transform _mainCamera;
-        private int _interval;
+        private MLPersistentCoordinateFrames.PCF _anchorPCF;
+        private MLPersistentCoordinateFrames.PCF _sharedPCF;
+        private string _sharedPCFKey = "AnchorPCF";
+        private Transform _camera;
+        private float _pcfSearchTimeout = 1;
+        private MLCoordinateFrameUID _cfuid;
 
         //Init:
         private void Awake()
         {
-            //refs:
-            _mainCamera = Camera.main.transform;
-
-            //offset helper:
-            _transformHelper = new GameObject("(TransformHelper)").transform;
-            _transformHelper.gameObject.hideFlags = HideFlags.HideInHierarchy;
-
-            //start systems:
-            MLPersistentCoordinateFrames.Start();
-            StartCoroutine("PCFDiscovery");
-
-            //hooks:
-            Transmission.Instance.OnPCF.AddListener(HandlePCFReceived);
-            Transmission.Instance.OnSpatialAlignment.AddListener(HandleSpatialAlignmentNotification);
+            //spatial alignment can not work in the Unity editor:
+            if (Application.isEditor)
+            {
+                enabled = false;
+            }
         }
 
-        //Deint:
+        private IEnumerator Start()
+        {
+            //hooks:
+            Transmission.Instance.OnOldestPeerUpdated.AddListener(HandleOldestPeerUpdated);
+            Transmission.Instance.OnGlobalStringChanged.AddListener(HandleGlobalStringChanged);
+            Transmission.Instance.OnGlobalStringsReceived.AddListener(HandleGlobalStringsReceived);
+
+            //refs:
+            _camera = Camera.main.transform;
+
+            //system start-ups:
+            if (!MLPersistentCoordinateFrames.IsStarted)
+            {
+                MLPersistentCoordinateFrames.Start();
+
+                //wait for MLPersistentCoordinateFrames to localize:
+                while (!MLPersistentCoordinateFrames.IsLocalized)
+                {
+                    yield return null;
+                }
+
+                //establish shared pcf:
+                MLPersistentCoordinateFrames.FindClosestPCF(_camera.position, out _anchorPCF, MLPersistentCoordinateFrames.PCF.Types.MultiUserMultiSession);
+                if (_anchorPCF == null)
+                {
+                    //keep looking:
+                    yield return new WaitForSeconds(_pcfSearchTimeout);
+                }
+
+                //hooks:
+                MLPersistentCoordinateFrames.OnLocalized += HandleLocalized;
+                MLPersistentCoordinateFrames.PCF.OnStatusChange += HandlePCFStatusChange;
+            }
+        }
+
+        //Deinit:
         private void OnDestroy()
         {
-            //unhooks:
-            if (Transmission.Instance != null)
-            {
-                Transmission.Instance.OnPCF.RemoveListener(HandlePCFReceived);
-            }
-
-            //shutdowns:
-            StopAllCoroutines();
+            //system turn offs:
             if (MLPersistentCoordinateFrames.IsStarted)
             {
                 MLPersistentCoordinateFrames.Stop();
@@ -88,149 +93,89 @@ namespace MagicLeapTools
         }
 
         //Coroutines:
-        private IEnumerator PCFDiscovery()
+        private IEnumerator WeAreTheOldest()
         {
-            //query until we get PCFs:
-            while (_localPCFs.Count == 0)
+            //make sure we found our anchor pcf:
+            while (_anchorPCF == null)
             {
-                MLPersistentCoordinateFrames.FindAllPCFs(out _localPCFs, QueryCount);
                 yield return null;
             }
 
-            while (true)
+            //update the global shared pcf:
+            _sharedPCF = _anchorPCF;
+            Reorient();
+            Transmission.SetGlobalString(_sharedPCFKey, _anchorPCF.CFUID.ToString());
+        }
+
+        private IEnumerator LocalizeToSharedPCF()
+        {
+            _cfuid = SerializationUtilities.StringToCFUID(Transmission.GetGlobalString(_sharedPCFKey));
+
+            //find shared pcf:
+            while (_sharedPCF == null)
             {
-                DiscoverPCFs();
-                yield return new WaitForSeconds(QueryInterval);
-                yield return null;
+                //locate:
+                MLPersistentCoordinateFrames.FindPCFByCFUID(_cfuid, out _sharedPCF);
+
+                //keep looking:
+                yield return new WaitForSeconds(_pcfSearchTimeout);
+            }
+
+            //we have our shared pcf!
+            Reorient();
+            Localized = true;
+            OnLocalized?.Invoke();
+        }
+
+        //Event Handlers:
+        private void HandleGlobalStringChanged(string key)
+        {
+            //is this a shared pcf update?
+            if (key == _sharedPCFKey)
+            {
+                StartCoroutine("LocalizeToSharedPCF");
+            }
+        }
+
+        private void HandleGlobalStringsReceived()
+        {
+            if (Transmission.HasGlobalString(_sharedPCFKey))
+            {
+                StartCoroutine("LocalizeToSharedPCF");
+            }
+        }
+
+        private void HandleOldestPeerUpdated(string oldest)
+        {
+            if (oldest == NetworkUtilities.MyAddress)
+            {
+                StartCoroutine("WeAreTheOldest");
+            }
+        }
+
+        private void HandleLocalized(bool localized)
+        {
+            if (localized)
+            {
+                //our shared pcf updated:
+                Reorient();
+            }
+        }
+
+        private void HandlePCFStatusChange(MLPersistentCoordinateFrames.PCF.Status pcfStatus, MLPersistentCoordinateFrames.PCF pcf)
+        {
+            if (_sharedPCF != null && pcf.CFUID == _sharedPCF.CFUID)
+            {
+                //our shared pcf updated:
+                Reorient();
             }
         }
 
         //Private Methods:
-        private void DiscoverPCFs()
+        private void Reorient()
         {
-            //interval:
-            _interval++;
-            _interval = _interval % 100;
-
-            //if previous send queue isn't finished then interrupt it:
-            StopCoroutine("SendPCFs");
-
-            //clear lists:
-            _localPCFs.Clear();
-            _localPCFData.Clear();
-            _localPCFReferences.Clear();
-            _outboundPCFs.Clear();
-
-            //get pcfs:
-            MLPersistentCoordinateFrames.FindAllPCFs(out _localPCFs, QueryCount);
-
-            //request poses:
-            foreach (var item in _localPCFs)
-            {
-                item.Update();
-                HandlePCFPoseRetrieval(item);
-            }
-        }
-
-        //Event Handlers:
-        private void HandleSpatialAlignmentNotification(string from)
-        {
-            if (!alignedPeers.Contains(from))
-            {
-                //save and report alignment:
-                alignedPeers.Add(from);
-                OnPeerAligned.Invoke(from);
-            }
-        }
-
-        private void HandlePCFPoseRetrieval(MLPersistentCoordinateFrames.PCF pcf)
-        {
-            //save results:
-            _localPCFData.Add(pcf);
-
-            //do we have all of them?
-            if (_localPCFData.Count == _localPCFs.Count)
-            {
-                //sort by distance:
-                _localPCFData = _localPCFData.OrderBy(p => Vector3.Distance(_mainCamera.position, p.Position)).ToList();
-
-                //grab a chunk of results:
-                for (int i = 0; i < Mathf.Min(OutboundCount, _localPCFData.Count); i++)
-                {
-                    //find offsets:
-                    _transformHelper.SetPositionAndRotation(_localPCFData[i].Position, _localPCFData[i].Rotation);
-                    Vector3 positionOffset = _transformHelper.InverseTransformPoint(Vector3.zero);
-                    Quaternion rotationOffset = Quaternion.Inverse(_transformHelper.rotation) * Quaternion.LookRotation(Vector3.forward);
-
-                    //catalog:
-                    _outboundPCFs.Add(new PCFMessage(_localPCFData[i].CFUID.ToString(), new Pose(positionOffset, rotationOffset), _interval));
-                    _localPCFReferences.Add(_localPCFData[i].CFUID.ToString(), _localPCFData[i]);
-                }
-
-                //send them out:
-                StartCoroutine("SendPCFs");
-            }
-        }
-
-        private void HandlePCFReceived(string from, string CFUID, Pose offset, int interval)
-        {
-            //find a matching local PCF:
-            if (_localPCFReferences.ContainsKey(CFUID))
-            {
-                if (!alignedPeers.Contains(from))
-                {
-                    //save and report alignment:
-                    alignedPeers.Add(from);
-                    OnPeerAligned.Invoke(from);
-                }
-
-                //get peer root offset from this PCF:
-                _transformHelper.SetPositionAndRotation(_localPCFReferences[CFUID].Position, _localPCFReferences[CFUID].Rotation);
-                Vector3 position = _transformHelper.TransformPoint(offset.position);
-                Quaternion rotation = _transformHelper.rotation * offset.rotation;
-
-                //first pcf message from this peer?
-                if (!_alignmentHistory.ContainsKey(from))
-                {
-                    //establish alignment history:
-                    _alignmentHistory.Add(from, new SpatialAlignmentHistory(interval));
-
-                    //snap peer root to initial:
-                    TransmissionRoot.Get(from).SetPositionAndRotationTargets(position, rotation);
-                }
-
-                //same interval:
-                if (_alignmentHistory[from].interval == interval)
-                {
-                    _alignmentHistory[from].positions.Add(position);
-                    _alignmentHistory[from].rotations.Add(rotation);
-                }
-                else
-                {
-                    //new interval:
-                    _alignmentHistory[from].interval = interval;
-                    TransmissionRoot.Get(from).SetPositionAndRotationTargets(_alignmentHistory[from].AveragePosition, _alignmentHistory[from].AverageRotation);
-
-                    //get ready for next interval's queue:
-                    _alignmentHistory[from].Clear();
-                    _alignmentHistory[from].positions.Add(position);
-                    _alignmentHistory[from].rotations.Add(rotation);
-                }
-            }
-        }
-
-        //Coroutines:
-        private IEnumerator SendPCFs()
-        {
-            //this will send out all pcfs sequentially throughout the SendDuration to not flood the socket:
-            float sendTimeout = SendDuration / _localPCFs.Count;
-
-            for (int i = 0; i < _outboundPCFs.Count; i++)
-            {
-                Transmission.Send(_outboundPCFs[i]);
-                yield return new WaitForSeconds(sendTimeout);
-                yield return null;
-            }
+            _sharedPCF.Update();
+            Transmission.Instance.sharedOrigin = new Pose(_sharedPCF.Position, _sharedPCF.Rotation);
         }
 #endif
     }

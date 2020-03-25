@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -190,8 +191,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: e6d877a61727f4697824be49474f95cf, type: 3}
     m_FontSize: 1
@@ -205,16 +204,19 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'The example requires two devices on the same network and/or a desktop running
-    this example in the Unity Editor.
+  m_Text: 'The example requires two devices on the same network and/or a desktop
+    running this example in the Unity Editor.
 
-    <color="yellow">Trigger</color> to send an RPC.
+    <color="yellow">Trigger</color>
+    to send an RPC.
 
     <color="yellow">Bumper</color> to send a StringMessage.
 
-    <color="yellow">Tap Touchpad</color> to update a Global Float.
+    <color="yellow">Tap
+    Touchpad</color> to update a Global Float.
 
-    The RPC message will change color of block on Controller.
+    The RPC message will change color
+    of block on Controller.
 
     The StringMessage will log into the console.'
 --- !u!222 &281072261
@@ -263,11 +265,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1583520913}
     m_Modifications:
-    - target: {fileID: 7599050699442747582, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
-        type: 3}
-      propertyPath: m_Name
-      value: Transmission
-      objectReference: {fileID: 0}
     - target: {fileID: 3711491077353356965, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -356,7 +353,7 @@ PrefabInstance:
     - target: {fileID: 4006321171478279076, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
         type: 3}
       propertyPath: appKey
-      value: 5209026653
+      value: 4705227560
       objectReference: {fileID: 0}
     - target: {fileID: 4006321171478279076, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
         type: 3}
@@ -412,6 +409,11 @@ PrefabInstance:
         type: 3}
       propertyPath: OnHostLost.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599050699442747582, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
+        type: 3}
+      propertyPath: m_Name
+      value: Transmission
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 73ecca7d038a8314d8f6e3d68ba973e1, type: 3}
@@ -527,6 +529,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1583520913}
     m_Modifications:
+    - target: {fileID: 5619764785158044116, guid: 4b83d5952ef78964a987c932f7375418,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619764785158044116, guid: 4b83d5952ef78964a987c932f7375418,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5619764785288450835, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
       propertyPath: m_Name
@@ -550,7 +562,7 @@ PrefabInstance:
     - target: {fileID: 5619764785288450844, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.11121954
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5619764785288450844, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
@@ -565,7 +577,7 @@ PrefabInstance:
     - target: {fileID: 5619764785288450844, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9937959
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5619764785288450844, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
@@ -587,20 +599,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5619764785158044116, guid: 4b83d5952ef78964a987c932f7375418,
+    - target: {fileID: 5619764785288450845, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5619764785158044116, guid: 4b83d5952ef78964a987c932f7375418,
-        type: 3}
-      propertyPath: m_SizeDelta.y
+      propertyPath: showStackTrace
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5619764785477124592, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 155
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5619764785477124592, guid: 4b83d5952ef78964a987c932f7375418,
         type: 3}
@@ -926,133 +933,81 @@ MonoBehaviour:
   OnControlConnected:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnControlDisconnected:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerPressBegan:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerDown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnDoubleTrigger:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerPressEnded:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerHold:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerMove:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.FloatEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnHomeButtonTap:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnDoubleHome:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnBumperDown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnDoubleBumper:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnBumperUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnBumperHold:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTouchDown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnDoubleTap:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnTouchUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnTouchMove:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnTouchRadialMove:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.FloatEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnTouchHold:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnForceTouchDown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnForceTouchUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTouchBeganMoving:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnSwipe:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.TouchpadGestureDirectionEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTapped:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.TouchpadGestureDirectionEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!4 &1669399717
 Transform:
   m_ObjectHideFlags: 0
@@ -1154,8 +1109,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2109846772}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10

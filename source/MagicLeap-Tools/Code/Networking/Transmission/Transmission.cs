@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -28,6 +28,13 @@ namespace MagicLeapTools
     /// </summary>
     public class Transmission : MonoBehaviour
     {
+        public Transform pcf;
+
+        private void LateUpdate()
+        {
+            pcf.SetPositionAndRotation(sharedOrigin.position, sharedOrigin.rotation);
+        }
+
         //Public Variables:
         public int port = 23000;
         public int bufferSize = 1024;
@@ -37,83 +44,87 @@ namespace MagicLeapTools
         public string privateKey;
         [Tooltip("All GameObjects in this list (in addition to the Transmission GameObject) will receive SendMessages when RPC messages are sent.")]
         public GameObject[] rpcTargets;
+        public Pose sharedOrigin;
         public bool debugOutgoing;
         public bool debugIncoming;
+        public static DateTime startUpTime;
 
         //Events:
-        [Space]
         /// <summary>
-        /// Fired when a peer with matching appKey and privateKey is found on the network. String value contains the IP address of this host.
+        /// Fired when a peer with matching appKey and privateKey is found on the network. String value contains the IP address of this host and DateTime value contains the startup time of the peer.
         /// </summary>
-        public StringEvent OnPeerFound;
+        public PeerFoundEvent OnPeerFound = new PeerFoundEvent();
         /// <summary>
         /// Fired when a previously known peer disappears. String value contains the IP address of this peer.
         /// </summary>
-        public StringEvent OnPeerLost;
+        public StringEvent OnPeerLost = new StringEvent();
         /// <summary>
         /// Fired when a reliable message send was impossible. String value contains the guid of the original message.
         /// </summary>
-        public StringEvent OnSendMessageFailure;
+        public StringEvent OnSendMessageFailure = new StringEvent();
         /// <summary>
         /// Fired when a reliable was successful. String value contains the guid of the original message.
         /// </summary>
-        public StringEvent OnSendMessageSuccess;
+        public StringEvent OnSendMessageSuccess = new StringEvent();
         /// <summary>
         /// When a global value changes this will provide the key to it.
         /// </summary>
-        public StringEvent OnGlobalStringChanged;
+        public StringEvent OnGlobalStringChanged = new StringEvent();
+        public UnityEvent OnGlobalBoolsReceived = new UnityEvent();
         /// <summary>
         /// When a global value changes this will provide the key to it.
         /// </summary>
-        public StringEvent OnGlobalBoolChanged;
+        public StringEvent OnGlobalBoolChanged = new StringEvent();
+        public UnityEvent OnGlobalStringsReceived = new UnityEvent();
         /// <summary>
         /// When a global value changes this will provide the key to it.
         /// </summary>
-        public StringEvent OnGlobalFloatChanged;
+        public StringEvent OnGlobalFloatChanged = new StringEvent();
+        public UnityEvent OnGlobalFloatsReceived = new UnityEvent();
         /// <summary>
         /// When a global value changes this will provide the key to it.
         /// </summary>
-        public StringEvent OnGlobalVector2Changed;
+        public StringEvent OnGlobalVector2Changed = new StringEvent();
+        public UnityEvent OnGlobalVector2sReceived = new UnityEvent();
         /// <summary>
         /// When a global value changes this will provide the key to it.
         /// </summary>
-        public StringEvent OnGlobalVector3Changed;
+        public StringEvent OnGlobalVector3Changed = new StringEvent();
+        public UnityEvent OnGlobalVector3sReceived = new UnityEvent();
         /// <summary>
         /// When a global value changes this will provide the key to it.
         /// </summary>
-        public StringEvent OnGlobalVector4Changed;
-                
-        public TransmissionObjectMsgEvent OnOwnershipLost;
-        public TransmissionObjectMsgEvent OnOwnershipGained;
-        public TransmissionObjectMsgEvent OnOwnershipTransferDenied;
-        public BoolMsgEvent OnBoolMessage;
-        public BoolArrayMsgEvent OnBoolArrayMessage;
-        public ByteArrayMsgEvent OnByteArrayMessage;
-        public ColorMsgEvent OnColorMessage;
-        public ColorArrayMsgEvent OnColorArrayMessage;
-        public FloatMsgEvent OnFloatMessage;
-        public FloatArrayMsgEvent OnFloatArrayMessage;
-        public PoseMsgEvent OnPoseMessage;
-        public PoseArrayMsgEvent OnPoseArrayMessage;
-        public QuaternionMsgEvent OnQuaternionMessage;
-        public QuaternionArrayMsgEvent OnQuaternionArrayMessage;
-        public StringMsgEvent OnStringMessage;
-        public StringArrayMsgEvent OnStringArrayMessage;
-        public Vector2MsgEvent OnVector2Message;
-        public Vector2ArrayMsgEvent OnVector2ArrayMessage;
-        public Vector3MsgEvent OnVector3Message;
-        public Vector3ArrayMsgEvent OnVector3ArrayMessage;
-        public Vector4MsgEvent OnVector4Message;
-        public Vector4ArrayMsgEvent OnVector4ArrayMessage;
-        public PCFEvent OnPCF;
+        public StringEvent OnGlobalVector4Changed = new StringEvent();
+        public UnityEvent OnGlobalVector4sReceived = new UnityEvent();
+        public TransmissionObjectMsgEvent OnOwnershipLost = new TransmissionObjectMsgEvent();
+        public TransmissionObjectMsgEvent OnOwnershipGained = new TransmissionObjectMsgEvent();
+        public TransmissionObjectMsgEvent OnOwnershipTransferDenied = new TransmissionObjectMsgEvent();
+        public BoolMsgEvent OnBoolMessage = new BoolMsgEvent();
+        public BoolArrayMsgEvent OnBoolArrayMessage = new BoolArrayMsgEvent();
+        public ByteArrayMsgEvent OnByteArrayMessage = new ByteArrayMsgEvent();
+        public ColorMsgEvent OnColorMessage = new ColorMsgEvent();
+        public ColorArrayMsgEvent OnColorArrayMessage = new ColorArrayMsgEvent();
+        public FloatMsgEvent OnFloatMessage = new FloatMsgEvent();
+        public FloatArrayMsgEvent OnFloatArrayMessage = new FloatArrayMsgEvent();
+        public PoseMsgEvent OnPoseMessage = new PoseMsgEvent();
+        public PoseArrayMsgEvent OnPoseArrayMessage = new PoseArrayMsgEvent();
+        public QuaternionMsgEvent OnQuaternionMessage = new QuaternionMsgEvent();
+        public QuaternionArrayMsgEvent OnQuaternionArrayMessage = new QuaternionArrayMsgEvent();
+        public StringMsgEvent OnStringMessage = new StringMsgEvent();
+        public StringArrayMsgEvent OnStringArrayMessage = new StringArrayMsgEvent();
+        public Vector2MsgEvent OnVector2Message = new Vector2MsgEvent();
+        public Vector2ArrayMsgEvent OnVector2ArrayMessage = new Vector2ArrayMsgEvent();
+        public Vector3MsgEvent OnVector3Message = new Vector3MsgEvent();
+        public Vector3ArrayMsgEvent OnVector3ArrayMessage = new Vector3ArrayMsgEvent();
+        public Vector4MsgEvent OnVector4Message = new Vector4MsgEvent();
+        public Vector4ArrayMsgEvent OnVector4ArrayMessage = new Vector4ArrayMsgEvent();
+        public StringEvent OnOldestPeerUpdated = new StringEvent();
+        public PoseEvent OnSharedOriginUpdated = new PoseEvent();
+
         /// <summary>
         /// Consumed internally by TransmissionObject to synchronize a transform to peers.
         /// </summary>
-        public TransformSyncMsgEvent OnTransformSync;
-        /// <summary>
-        /// Consumed internally by SpatialAlignment to alert of a new peer we are aligned with.
-        /// </summary>
-        public SpatialAlignmentMsgEvent OnSpatialAlignment;
+        public TransformSyncMsgEvent OnTransformSync = new TransformSyncMsgEvent();
 
         //Public Properties:
         public static Transmission Instance
@@ -144,7 +155,7 @@ namespace MagicLeapTools
             }
         }
 
-        public static string[] Peers
+        public string[] Peers
         {
             get
             {
@@ -152,11 +163,18 @@ namespace MagicLeapTools
             }
         }
 
+        public string OldestPeer
+        {
+            get;
+            private set;
+        }
+
         //Private Variables:
         private const float HeartbeatInterval = 2;
         private const float ReliableResendInterval = .5f;
         private const float MaxResendDuration = 7;
-        private const float StalePeerTimeout = 8; 
+        private const float StalePeerTimeout = 8;
+        private const float OldestIdentifierTimeout = 3;
         private static bool _receiveThreadAlive;
         private static ConcurrentBag<string> _receivedMessages = new ConcurrentBag<string>(); //do we need to be concerned about the constant growth of this?
         private List<string> _confirmedReliableMessages = new List<string>();
@@ -174,11 +192,17 @@ namespace MagicLeapTools
         private static Dictionary<string, Vector2> _globalVector2 = new Dictionary<string, Vector2>();
         private static Dictionary<string, Vector3> _globalVector3 = new Dictionary<string, Vector3>();
         private static Dictionary<string, Vector4> _globalVector4 = new Dictionary<string, Vector4>();
+        private static Dictionary<string, List<TransmissionObject>> _spawnedObjects = new Dictionary<string, List<TransmissionObject>>();
+        private static SortedDictionary<long, string> _peerAges = new SortedDictionary<long, string>();
         private static bool _quitting;
+        private Pose _previousSharedOrigin;
+        private static long _age;
 
         //Init:
         private void Awake()
         {
+            _age = DateTime.Now.Ticks;
+            _peerAges.Add(_age, NetworkUtilities.MyAddress);
             Initialize();
         }
 
@@ -215,6 +239,14 @@ namespace MagicLeapTools
         private void Update()
         {
             ReceiveMessages();
+
+            //respond to shared origin updates:
+            if (_previousSharedOrigin != sharedOrigin)
+            {
+                _previousSharedOrigin = sharedOrigin;
+                TransmissionObject.SynchronizeAll();
+                OnSharedOriginUpdated?.Invoke(sharedOrigin);
+            }
         }
 
         //Public Methods:
@@ -401,8 +433,12 @@ namespace MagicLeapTools
         /// </summary>
         public static TransmissionObject Spawn(string resourceFileName, Vector3 position, Quaternion rotation, Vector3 scale)
         {
+            //get relative data:
+            Vector3 relativePosition = TransformUtilities.LocalPosition(_instance.sharedOrigin.position, _instance.sharedOrigin.rotation, position);
+            Quaternion relativeRotation = TransformUtilities.GetRotationOffset(_instance.sharedOrigin.rotation, rotation);
+           
             //spawn local:
-            TransmissionObject spawned = PerformSpawn(resourceFileName, true, NetworkUtilities.MyAddress, Guid.NewGuid().ToString(), position, rotation, scale);
+            TransmissionObject spawned = PerformSpawn(resourceFileName, true, NetworkUtilities.MyAddress, Guid.NewGuid().ToString(), relativePosition, relativeRotation, scale);
 
             //share if the spawn was successful:
             if (spawned != null)
@@ -416,7 +452,7 @@ namespace MagicLeapTools
                 //if we have peers then let them know we spawned something:
                 if (_peers.Count != 0)
                 {
-                    SpawnMessage spawnMessage = new SpawnMessage(resourceFileName, spawned.guid, position, rotation, scale);
+                    SpawnMessage spawnMessage = new SpawnMessage(resourceFileName, spawned.guid, relativePosition, relativeRotation, scale);
                     Send(spawnMessage);
                 }
             }
@@ -464,7 +500,7 @@ namespace MagicLeapTools
             if (string.IsNullOrEmpty(message.t))
             {
                 //send to all peers:
-                foreach (var item in Peers)
+                foreach (var item in _instance.Peers)
                 {
                     endPoint.Address = IPAddress.Parse(item);
                     _udpClient.Send(bytes, bytes.Length, endPoint);
@@ -509,6 +545,8 @@ namespace MagicLeapTools
             }
 
             _globalStrings[key] = value;
+
+            Instance.OnGlobalStringChanged?.Invoke(key);
         }
 
         private static void SetLocalGlobalBools(string key, bool value)
@@ -520,6 +558,8 @@ namespace MagicLeapTools
             }
 
             _globalBools[key] = value;
+
+            Instance.OnGlobalBoolChanged?.Invoke(key);
         }
 
         private static void SetLocalGlobalFloats(string key, float value)
@@ -531,6 +571,8 @@ namespace MagicLeapTools
             }
 
             _globalFloats[key] = value;
+
+            Instance.OnGlobalFloatChanged?.Invoke(key);
         }
 
         private static void SetLocalGlobalVector2(string key, Vector2 value)
@@ -542,6 +584,8 @@ namespace MagicLeapTools
             }
 
             _globalVector2[key] = value;
+
+            Instance.OnGlobalVector2Changed?.Invoke(key);
         }
 
         private static void SetLocalGlobalVector3(string key, Vector3 value)
@@ -553,6 +597,8 @@ namespace MagicLeapTools
             }
 
             _globalVector3[key] = value;
+
+            Instance.OnGlobalVector3Changed?.Invoke(key);
         }
 
         private static void SetLocalGlobalVector4(string key, Vector4 value)
@@ -564,11 +610,23 @@ namespace MagicLeapTools
             }
 
             _globalVector4[key] = value;
+
+            Instance.OnGlobalVector4Changed?.Invoke(key);
         }
 
         private static void Remove(string ip)
         {
-            Destroy(TransmissionRoot.Get(ip).gameObject);
+            if (!_spawnedObjects.ContainsKey(ip))
+            {
+                return;
+            }
+
+            //kill gameobjects:
+            foreach (var item in _spawnedObjects[ip])
+            {
+                Destroy(item.gameObject);
+            }
+            _spawnedObjects.Remove(ip);
         }
 
         private static void Initialize()
@@ -579,10 +637,7 @@ namespace MagicLeapTools
                 return;
             }
             _initialized = true;
-
-            //add local root:
-            TransmissionRoot.Add(NetworkUtilities.MyAddress);
-
+            
             //establish socket:
             bool socketOpen = false;
             while (!socketOpen)
@@ -605,11 +660,11 @@ namespace MagicLeapTools
             _receiveThread.IsBackground = true;
             _receiveThread.Start();
 
+            //fire off an awake event:
+            Send(new TransmissionMessage(TransmissionMessageType.AwakeMessage, TransmissionAudience.NetworkBroadcast, "", true, _age.ToString()));
+
             Instance.StartCoroutine(Heartbeat());
             Instance.StartCoroutine(ReliableRetry());
-
-            //fire off an awake event:
-            Send(new TransmissionMessage(TransmissionMessageType.AwakeMessage, TransmissionAudience.NetworkBroadcast, "", true));
 
             //TransmissionObjects can only be spawned for proper use:
             TransmissionObject[] unspawnedTransmissionObjects = FindObjectsOfType<TransmissionObject>();
@@ -623,7 +678,7 @@ namespace MagicLeapTools
             }
         }
 
-        private static TransmissionObject PerformSpawn(string resourceFileName, bool mine, string creator, string guid, Vector3 position, Quaternion rotation, Vector3 scale)
+        private static TransmissionObject PerformSpawn(string resourceFileName, bool mine, string creator, string guid, Vector3 relativePosition, Quaternion relativeRotation, Vector3 scale)
         {
             //already exists;
             if (TransmissionObject.Exists(guid))
@@ -668,14 +723,22 @@ namespace MagicLeapTools
             spawned.resourceFileName = resourceFileName;
             spawned.creator = creator;
 
-            //parenting:
-            spawned.transform.parent = TransmissionRoot.Get(creator).transform;
-            spawned.targetPosition = position;
-            spawned.targetRotation = rotation;
+            //placement:
+            spawned.localPosition = relativePosition;
+            spawned.rotationOffset = relativeRotation;
             spawned.targetScale = scale;
-            spawned.transform.localPosition = position;
-            spawned.transform.localRotation = rotation;
+            Vector3 position = TransformUtilities.WorldPosition(_instance.sharedOrigin.position, _instance.sharedOrigin.rotation, relativePosition);
+            Quaternion rotation = TransformUtilities.ApplyRotationOffset(_instance.sharedOrigin.rotation, relativeRotation);
+            spawned.transform.SetPositionAndRotation(position, rotation);
             spawned.transform.localScale = scale;
+
+            //cache:
+            if (!_spawnedObjects.ContainsKey(creator))
+            {
+                _spawnedObjects.Add(creator, new List<TransmissionObject>());
+            }
+            _spawnedObjects[creator].Add(spawned);
+
             return spawned;
         }
 
@@ -731,7 +794,7 @@ namespace MagicLeapTools
                     {
                         continue;
                     }
-
+                    
                     switch ((TransmissionMessageType)currentMessage.ty)
                     {
                         case TransmissionMessageType.GlobalStringsRequestMessage:
@@ -762,12 +825,25 @@ namespace MagicLeapTools
                             Send(new GlobalVector4RecapMessage(currentMessage.f, _globalVector4.Keys.ToArray<string>(), _globalVector4.Values.ToArray<Vector4>()));
                             break;
 
+                        case TransmissionMessageType.AwakeMessage:
+                            //if this peer hasn't been gone long then fire a recap:
+                            if (_peers.ContainsKey(currentMessage.f))
+                            {
+                                OnPeerFound?.Invoke(currentMessage.f, long.Parse(currentMessage.d));
+                                _peers[currentMessage.f] = Time.realtimeSinceStartup;
+                            }
+                            break;
+
                         case TransmissionMessageType.HeartbeatMessage:
                             //new peer:
                             if (!_peers.ContainsKey(currentMessage.f))
                             {
-                                TransmissionRoot.Add(currentMessage.f);
                                 _peers.Add(currentMessage.f, 0);
+
+                                //oldest peer determination:
+                                _peerAges.Add(long.Parse(currentMessage.d), currentMessage.f);
+                                StopCoroutine("OldestIdentifier");
+                                StartCoroutine("OldestIdentifier");
 
                                 //if I have no global values then ask this new peer for theirs:
                                 if (_peers.Count == 1)
@@ -803,7 +879,7 @@ namespace MagicLeapTools
                                     }
                                 }
 
-                                OnPeerFound?.Invoke(currentMessage.f);
+                                OnPeerFound?.Invoke(currentMessage.f, _age);
                             }
                             //catalog heartbeat time:
                             _peers[currentMessage.f] = Time.realtimeSinceStartup;
@@ -820,15 +896,6 @@ namespace MagicLeapTools
                                 //confirmed!
                                 _unconfirmedReliableMessages.Remove(currentMessage.g);
                                 OnSendMessageSuccess?.Invoke(currentMessage.g);
-                            }
-                            break;
-
-                        case TransmissionMessageType.AwakeMessage:
-                            //if this peer hasn't been gone long then fire a recap:
-                            if (_peers.ContainsKey(currentMessage.f))
-                            {
-                                OnPeerFound?.Invoke(currentMessage.f);
-                                _peers[currentMessage.f] = Time.realtimeSinceStartup;
                             }
                             break;
 
@@ -876,6 +943,7 @@ namespace MagicLeapTools
                             {
                                 OnGlobalFloatChanged?.Invoke(item.Key);
                             }
+                            OnGlobalFloatsReceived?.Invoke();
                             break;
 
                         case TransmissionMessageType.GlobalBoolChangedMessage:
@@ -891,6 +959,7 @@ namespace MagicLeapTools
                             {
                                 OnGlobalBoolChanged?.Invoke(item.Key);
                             }
+                            OnGlobalBoolsReceived?.Invoke();
                             break;
 
                         case TransmissionMessageType.GlobalStringChangedMessage:
@@ -906,6 +975,7 @@ namespace MagicLeapTools
                             {
                                 OnGlobalStringChanged?.Invoke(item.Key);
                             }
+                            OnGlobalStringsReceived?.Invoke();
                             break;
 
                         case TransmissionMessageType.GlobalVector2ChangedMessage:
@@ -917,7 +987,11 @@ namespace MagicLeapTools
                         case TransmissionMessageType.GlobalVector2RecapMessage:
                             GlobalVector2RecapMessage globalVector2RecapMessage = UnpackMessage<GlobalVector2RecapMessage>(rawMessage);
                             _globalVector2 = globalVector2RecapMessage.k.Zip(globalVector2RecapMessage.v, (s, i) => new { s, i }).ToDictionary(item => item.s, item => item.i);
-                            foreach (var key in _globalVector2.Keys) { OnGlobalVector2Changed?.Invoke(key); }
+                            foreach (var key in _globalVector2.Keys)
+                            {
+                                OnGlobalVector2Changed?.Invoke(key);
+                            }
+                            OnGlobalVector2sReceived?.Invoke();
                             break;
 
                         case TransmissionMessageType.GlobalVector3ChangedMessage:
@@ -929,7 +1003,11 @@ namespace MagicLeapTools
                         case TransmissionMessageType.GlobalVector3RecapMessage:
                             GlobalVector3RecapMessage globalVector3RecapMessage = UnpackMessage<GlobalVector3RecapMessage>(rawMessage);
                             _globalVector3 = globalVector3RecapMessage.k.Zip(globalVector3RecapMessage.v, (s, i) => new { s, i }).ToDictionary(item => item.s, item => item.i);
-                            foreach (var key in _globalVector3.Keys) { OnGlobalVector3Changed?.Invoke(key); }
+                            foreach (var key in _globalVector3.Keys)
+                            {
+                                OnGlobalVector3Changed?.Invoke(key);
+                            }
+                            OnGlobalVector3sReceived?.Invoke();
                             break;
 
                         case TransmissionMessageType.GlobalVector4ChangedMessage:
@@ -941,10 +1019,13 @@ namespace MagicLeapTools
                         case TransmissionMessageType.GlobalVector4RecapMessage:
                             GlobalVector4RecapMessage globalVector4RecapMessage = UnpackMessage<GlobalVector4RecapMessage>(rawMessage);
                             _globalVector4 = globalVector4RecapMessage.k.Zip(globalVector4RecapMessage.v, (s, i) => new { s, i }).ToDictionary(item => item.s, item => item.i);
-                            foreach (var key in _globalVector4.Keys) { OnGlobalVector4Changed?.Invoke(key); }
+                            foreach (var key in _globalVector4.Keys)
+                            {
+                                OnGlobalVector4Changed?.Invoke(key);
+                            }
+                            OnGlobalVector4sReceived?.Invoke();
                             break;
-
-
+                            
                         case TransmissionMessageType.StringMessage:
                             StringMessage stringMessage = UnpackMessage<StringMessage>(rawMessage);
                             OnStringMessage?.Invoke(stringMessage);
@@ -1043,11 +1124,11 @@ namespace MagicLeapTools
                         case TransmissionMessageType.SpawnMessage:
                             SpawnMessage spawnMessage = UnpackMessage<SpawnMessage>(rawMessage);
 
-                            Vector3 spawnPosition = new Vector3((float)spawnMessage.px, (float)spawnMessage.py, (float)spawnMessage.pz);
-                            Quaternion spawnRotation  = new Quaternion((float)spawnMessage.rx, (float)spawnMessage.ry, (float)spawnMessage.rz, (float)spawnMessage.rw);
+                            Vector3 relativeSpawnPosition = new Vector3((float)spawnMessage.px, (float)spawnMessage.py, (float)spawnMessage.pz);
+                            Quaternion relativeSpawnRotation  = new Quaternion((float)spawnMessage.rx, (float)spawnMessage.ry, (float)spawnMessage.rz, (float)spawnMessage.rw);
                             Vector3 spawnScale = new Vector3((float)spawnMessage.sx, (float)spawnMessage.sy, (float)spawnMessage.sz);
 
-                            TransmissionObject spawnObject = PerformSpawn(spawnMessage.rf, false, spawnMessage.f, spawnMessage.i, spawnPosition, spawnRotation, spawnScale);
+                            TransmissionObject spawnObject = PerformSpawn(spawnMessage.rf, false, spawnMessage.f, spawnMessage.i, relativeSpawnPosition, relativeSpawnRotation, spawnScale);
                             break;
 
                         case TransmissionMessageType.DespawnMessage:
@@ -1068,25 +1149,12 @@ namespace MagicLeapTools
                             Quaternion spawnRecapRotation = new Quaternion((float)spawnRecapMessage.rx, (float)spawnRecapMessage.ry, (float)spawnRecapMessage.rz, (float)spawnRecapMessage.rw);
                             Vector3 spawnRecapScale = new Vector3((float)spawnRecapMessage.sx, (float)spawnRecapMessage.sy, (float)spawnRecapMessage.sz);
 
-                            //make sure root is ready:
-                            TransmissionRoot.Add(spawnRecapMessage.f);
-
                             TransmissionObject spawnRecapObject = PerformSpawn(spawnRecapMessage.rf, false, spawnRecapMessage.f, spawnRecapMessage.i, spawnRecapPosition, spawnRecapRotation, spawnRecapScale);
                             break;
 
                         case TransmissionMessageType.TransformSyncMessage:
                             TransformSyncMessage transformSyncMessage = UnpackMessage<TransformSyncMessage>(rawMessage);
                             OnTransformSync?.Invoke(transformSyncMessage);
-                            break;
-
-                        case TransmissionMessageType.SpatialAlignmentMessage:
-                            SpatialAlignmentMessage spatialAlignmentMessage = UnpackMessage<SpatialAlignmentMessage>(rawMessage);
-                            OnSpatialAlignment?.Invoke(spatialAlignmentMessage.f);
-                            break;
-
-                        case TransmissionMessageType.PCFMessage:
-                            PCFMessage pcfMessage = UnpackMessage<PCFMessage>(rawMessage);
-                            OnPCF?.Invoke(pcfMessage.f, pcfMessage.c, pcfMessage.o, pcfMessage.i);
                             break;
 
                         case TransmissionMessageType.OwnershipTransferenceRequestMessage:
@@ -1126,6 +1194,20 @@ namespace MagicLeapTools
         }
 
         //Coroutines:
+        private IEnumerator OldestIdentifier()
+        {
+            //timeout:
+            yield return new WaitForSeconds(OldestIdentifierTimeout);
+
+            //find oldest:
+            string oldest = _peerAges.ElementAt(0).Value;
+            if (OldestPeer != oldest )
+            {
+                OldestPeer = oldest;
+                OnOldestPeerUpdated?.Invoke(OldestPeer);
+            }
+        }
+
         private static IEnumerator ReliableRetry()
         {
             while (true)
@@ -1162,8 +1244,8 @@ namespace MagicLeapTools
         {
             while (true)
             {
-                //transmit message:
-                Send(new TransmissionMessage(TransmissionMessageType.HeartbeatMessage, TransmissionAudience.NetworkBroadcast, "", false));
+                //transmit message - set startup time as our data for oldest peer evaluations:
+                Send(new TransmissionMessage(TransmissionMessageType.HeartbeatMessage, TransmissionAudience.NetworkBroadcast, "", false, _age.ToString()));
 
                 //stale peer identification:
                 List<string> stalePeers = new List<string>();
@@ -1180,6 +1262,9 @@ namespace MagicLeapTools
                 {
                     Remove(item);
                     _peers.Remove(item);
+                    //remove from ages by value:
+                    var deadAge = _peerAges.First(kvp => kvp.Value == item);
+                    _peerAges.Remove(deadAge.Key);
                     Instance.OnPeerLost?.Invoke(item);
                 }
 
@@ -1194,6 +1279,11 @@ namespace MagicLeapTools
         {
             while (_receiveThreadAlive)
             {
+                if (Instance == null)
+                {
+                    break;
+                }
+
                 //catalog message:
                 byte[] bytes = _udpClient.Receive(ref _receiveEndPoint);
 

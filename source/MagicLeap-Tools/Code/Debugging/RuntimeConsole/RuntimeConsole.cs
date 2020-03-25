@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -59,6 +59,7 @@ namespace MagicLeapTools
             //only operate if not in editor:
             if (Application.isEditor)
             {
+                Debug.LogWarning("RuntimeConsole is intended easy debugging on device and will be disabled while playing in the editor.");
                 gameObject.SetActive(false);
             }
 
@@ -170,9 +171,9 @@ namespace MagicLeapTools
         }
 
         //Event Handlers:
-        private void HandleTap(MLInput.Controller.TouchpadGesture.GestureDirection Direction)
+        private void HandleTap(MLInput.Controller.TouchpadGesture.GestureDirection direction)
         {
-            switch (Direction)
+            switch (direction)
             {
                 case MLInput.Controller.TouchpadGesture.GestureDirection.Up:
                     ScrollUp();

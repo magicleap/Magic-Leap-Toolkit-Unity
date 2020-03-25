@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -300,6 +301,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -402,8 +404,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 23
@@ -742,6 +742,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23288401035578246, guid: b6af97b52b3429641aa904690975fa80,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f7a8f815117efc428db87c9080e7cd0, type: 2}
     - target: {fileID: 114301182059694268, guid: b6af97b52b3429641aa904690975fa80,
         type: 3}
       propertyPath: m_LevelOfDetail
@@ -752,11 +757,6 @@ PrefabInstance:
       propertyPath: m_Density
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 23288401035578246, guid: b6af97b52b3429641aa904690975fa80,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 5f7a8f815117efc428db87c9080e7cd0, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6af97b52b3429641aa904690975fa80, type: 3}
 --- !u!4 &1838162726 stripped
@@ -775,6 +775,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1943234069}
   - component: {fileID: 1943234068}
+  - component: {fileID: 1943234070}
   m_Layer: 0
   m_Name: PlaceOnFloor
   m_TagString: Untagged
@@ -797,6 +798,10 @@ MonoBehaviour:
   instructions: {fileID: 50776718}
   content: {fileID: 1834066570}
   flippedForward: 0
+  events:
+    OnPlaced:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!4 &1943234069
 Transform:
   m_ObjectHideFlags: 0
@@ -811,6 +816,18 @@ Transform:
   m_Father: {fileID: 1177597215}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1943234070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943234067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7603cbb02423f6f498edcc4d81a95cd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1944558302
 GameObject:
   m_ObjectHideFlags: 0

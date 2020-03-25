@@ -1,13 +1,14 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
 using UnityEngine;
 using UnityEngine.Events;
+using System;
 #if PLATFORM_LUMIN
 using UnityEngine.XR.MagicLeap;
 #endif
@@ -22,7 +23,27 @@ namespace MagicLeapTools
 #endif
 
     [System.Serializable]
-    public class PCFEvent : UnityEvent<string, string, Pose, int>
+    public class PeerFoundEvent : UnityEvent<string, long>
+    {
+    }
+
+    [System.Serializable]
+    public class TriggerEvent : UnityEvent<Collider>
+    {
+    }
+
+    [System.Serializable]
+    public class CollisionEvent : UnityEvent<Collision>
+    {
+    }
+
+    [System.Serializable]
+    public class InteractionPointEvent : UnityEvent<InteractionPoint>
+    {
+    }
+
+    [System.Serializable]
+    public class InteractionPointDragEvent : UnityEvent<InteractionPoint[], Vector3, Quaternion, float>
     {
     }
 

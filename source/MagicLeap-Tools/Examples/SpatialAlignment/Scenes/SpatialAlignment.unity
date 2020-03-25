@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -154,133 +155,81 @@ MonoBehaviour:
   OnControlConnected:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnControlDisconnected:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerPressBegan:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerDown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnDoubleTrigger:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerPressEnded:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerHold:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTriggerMove:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.FloatEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnHomeButtonTap:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnDoubleHome:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnBumperDown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnDoubleBumper:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnBumperUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnBumperHold:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTouchDown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnDoubleTap:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnTouchUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnTouchMove:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnTouchRadialMove:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.FloatEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnTouchHold:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnForceTouchDown:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnForceTouchUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTouchBeganMoving:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnSwipe:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.TouchpadGestureDirectionEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnTapped:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MagicLeapTools.TouchpadGestureDirectionEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!4 &460629654
 Transform:
   m_ObjectHideFlags: 0
@@ -366,11 +315,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 549492915}
     m_Modifications:
-    - target: {fileID: 7599050699442747582, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
-        type: 3}
-      propertyPath: m_Name
-      value: Transmission
-      objectReference: {fileID: 0}
     - target: {fileID: 3711491077353356965, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -428,18 +372,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4006321171478279076, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
         type: 3}
-      propertyPath: appKey
-      value: 100
+      propertyPath: pcf
+      value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 4006321171478279076, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
+    - target: {fileID: 7599050699442747582, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
         type: 3}
-      propertyPath: debugIncoming
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4006321171478279076, guid: 73ecca7d038a8314d8f6e3d68ba973e1,
-        type: 3}
-      propertyPath: debugOutgoing
-      value: 0
+      propertyPath: m_Name
+      value: Transmission
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 73ecca7d038a8314d8f6e3d68ba973e1, type: 3}
@@ -458,7 +397,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 764088931}
-  - component: {fileID: 764088933}
+  - component: {fileID: 764088930}
   m_Layer: 0
   m_Name: SpatialAlignment
   m_TagString: Untagged
@@ -466,6 +405,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &764088930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764088929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9617c44d29ca71d4498e3baeaa01cd21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnLocalized:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &764088931
 Transform:
   m_ObjectHideFlags: 0
@@ -480,18 +434,6 @@ Transform:
   m_Father: {fileID: 549492915}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &764088933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 764088929}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1937a7d72e5770b44932ff4a2cf9f823, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &983350818
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -625,8 +567,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: e6d877a61727f4697824be49474f95cf, type: 3}
     m_FontSize: 1
@@ -642,7 +582,8 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'This example requires more one device on the same network.
 
-    <color="yellow">Trigger</color> to stamp a block.
+    <color="yellow">Trigger</color>
+    to stamp a block.
 
     <color="yellow">Bumper</color> to clear all stamped blocks.'
 --- !u!222 &1415009322
@@ -837,8 +778,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603623710}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10

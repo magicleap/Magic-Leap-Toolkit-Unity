@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -14,16 +14,44 @@ using MagicLeapTools;
 
 public class SurfaceDetailsExample : MonoBehaviour
 {
+#if PLATFORM_LUMIN
     //Public Variables:
     public Transform controllerPose;
     public Transform cursor;
     [Tooltip("The distance to separate the cursor from a collision to avoid occlusion.")]
-    public float surfaceOffset = 0.0508f;
+    public float surfaceOffset = 0.0254f;
     public Text status;
+    public Transform ceiling;
+    public Transform floor;
+
+    //Private Variables:
+    private Transform _camera;
+
+    //Init:
+    private void Awake()
+    {
+        _camera = Camera.main.transform;
+    }
 
     //Loops:
     private void Update()
     {
+        //used to orient the ceiling and floor visuals:
+        Vector3 flatForward = Vector3.ProjectOnPlane(_camera.forward, Vector3.up);
+        
+        //set ceiling and floor visuals:
+        if (SurfaceDetails.CeilingFound)
+        {
+            ceiling.position = new Vector3(_camera.position.x, SurfaceDetails.CeilingHeight, _camera.position.z);
+            ceiling.rotation = Quaternion.LookRotation(Vector3.up, flatForward);
+        }
+
+        if (SurfaceDetails.FloorFound)
+        {
+            floor.position = new Vector3(_camera.position.x, SurfaceDetails.FloorHeight, _camera.position.z);
+            floor.rotation = Quaternion.LookRotation(Vector3.down, flatForward);
+        }
+
         RaycastHit hit;
         if (Physics.Raycast(controllerPose.position, controllerPose.forward, out hit))
         {
@@ -68,4 +96,5 @@ public class SurfaceDetailsExample : MonoBehaviour
             status.text = "NOTHING!";
         }
     }
+#endif
 }

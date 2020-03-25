@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -16,15 +16,10 @@ using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeapTools
 {
+    [RequireComponent(typeof(SpatialMapperThrottle))]
     public class PlaceOnFloor : MonoBehaviour
     {
 #if PLATFORM_LUMIN
-        //Events:
-        /// <summary>
-        /// Fired when we have a clear area of the floor and the user's head is relatively stable:
-        /// </summary>
-        public event Action<Vector3> OnPlaced;
-
         //Public Properties:
         public Vector3 Location
         {
@@ -45,6 +40,12 @@ namespace MagicLeapTools
         public GameObject content;
         [Tooltip("Does content's content match it's transform forward?")]
         public bool flippedForward;
+
+        //Events:
+        /// <summary>
+        /// Fired when we have a clear area of the floor and the user's head is relatively stable:
+        /// </summary>
+        public Vector3Event OnPlaced = new Vector3Event();
 
         //Private Variables:
         private readonly float _headLocationIdleThreshold = 0.003f;
@@ -67,6 +68,12 @@ namespace MagicLeapTools
         {
             //refs:
             _mainCamera = Camera.main.transform;
+
+            //requirements:
+            if (FindObjectOfType<MLSpatialMapper>() == null)
+            {
+                Debug.LogError("PlaceOnFloor requires and instance of the MLSpatialMapper in your scene.");
+            }
         }
 
         //Flow:
@@ -156,6 +163,7 @@ namespace MagicLeapTools
             if (Physics.Raycast(_mainCamera.position, _mainCamera.forward, out hit))
             {
                 SurfaceType surface = SurfaceDetails.Analyze(hit);
+                
                 if (surface == SurfaceType.Floor)
                 {
                     Location = hit.point;

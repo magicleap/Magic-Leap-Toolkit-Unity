@@ -43,9 +43,137 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1acab6330f349a0449376de50fbb3c94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pcf: {fileID: 0}
   port: 23000
   bufferSize: 1024
   appKey: 
   privateKey: 
+  rpcTargets: []
+  sharedOrigin:
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 0}
   debugOutgoing: 0
   debugIncoming: 0
+  OnPeerFound:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPeerLost:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSendMessageFailure:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSendMessageSuccess:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalStringChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalBoolsReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalBoolChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalStringsReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalFloatChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalFloatsReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalVector2Changed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalVector2sReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalVector3Changed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalVector3sReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalVector4Changed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalVector4sReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOwnershipLost:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOwnershipGained:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOwnershipTransferDenied:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBoolMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBoolArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnByteArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnColorMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnColorArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFloatMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFloatArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoseMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoseArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnQuaternionMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnQuaternionArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStringMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStringArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnVector2Message:
+    m_PersistentCalls:
+      m_Calls: []
+  OnVector2ArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnVector3Message:
+    m_PersistentCalls:
+      m_Calls: []
+  OnVector3ArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnVector4Message:
+    m_PersistentCalls:
+      m_Calls: []
+  OnVector4ArrayMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOldestPeerUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSharedOriginUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTransformSync:
+    m_PersistentCalls:
+      m_Calls: []

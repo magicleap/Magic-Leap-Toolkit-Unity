@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -48,6 +48,12 @@ namespace MagicLeapTools
         public float bendPointPercentage = .9f;
         [Tooltip("How much to exaggerate the bend.")]
         public float bendPredictionMultiplier = 14;
+        [Tooltip("Allow for the ability to bring something in very close with little effort by simply dragging in close to the body.")]
+        public bool allowYanking = true;
+        [Tooltip("If yanking is allowed this will be the final distance from the pointer.")]
+        public float yankedDistance = 0.0889f;
+        [Tooltip("If yanking is allowed this distance is the minimum distance from the body before yanking triggers.")]
+        public float minBodyDistance = 0.44f;
         [Tooltip("Process reachCurve to make grabbing far away things easier?")]
         public bool allowReachStretching = true;
         [Tooltip("Defines stretch evaluation for pointer when reaching while not dragging.")]
@@ -163,6 +169,10 @@ namespace MagicLeapTools
         private Vector3 _bendPredictionPoint;
         private InputReceiver _targetedInputReceiver;
         private bool _bendy;
+        private Curve _curve;
+        private float _minBodyDistanceBuffer = 0.0127f;
+        private float _yankThreshold;
+        private bool _yanked;
 
         //Private Properties:
         private float Length
@@ -177,7 +187,31 @@ namespace MagicLeapTools
         {
             get
             {
-                return inputDriver.motionSource.position + inputDriver.motionSource.forward * _currentDistance;
+                //relative input driver location:
+                Vector3 relative = _mainCamera.transform.InverseTransformPoint(inputDriver.motionSource.position);
+
+                //yanked?
+                if (_dragging && allowYanking)
+                {
+                    if (relative.z < _yankThreshold)
+                    {
+                        _yanked = true;
+                    }
+                    else if (relative.z >= _yankThreshold + _minBodyDistanceBuffer)
+                    {
+                        _yanked = false;
+                    }
+                }
+
+                //apply offset:
+                if (_yanked)
+                {
+                    return inputDriver.motionSource.position + inputDriver.motionSource.forward * yankedDistance;
+                }
+                else
+                {
+                    return inputDriver.motionSource.position + inputDriver.motionSource.forward * _currentDistance;
+                }
             }
         }
 
@@ -210,6 +244,10 @@ namespace MagicLeapTools
             //refs:
             _lineRenderer = GetComponent<LineRenderer>();
             _mainCamera = Camera.main;
+
+            //sets:
+            _curve = new Curve();
+            Normal = inputDriver.motionSource.forward * -1;
 
             //establish distance:
             _currentDistance = idleDistance;
@@ -261,6 +299,12 @@ namespace MagicLeapTools
         //Loops:
         private void Update()
         {
+            //don't process if the driver is inactive:
+            if (!inputDriver.Active)
+            {
+                return;
+            }
+
             //swap bendy status if needed:
             if (!_dragging && rigidWhilePointing)
             {
@@ -341,8 +385,7 @@ namespace MagicLeapTools
             {
                 return;
             }
-
-
+            
             //we can't drag if we aren't selecting:
             if (Status != PointerStatus.Selecting) return;
 
@@ -353,6 +396,16 @@ namespace MagicLeapTools
             //did we start dragging?
             if (movedDistance > dragMovementThreshold || angleDistance > dragRotationThreshold)
             {
+                //where is the distance at which we just yank the dragged thing all the way in to make things easier?
+                _yankThreshold = minBodyDistance;
+
+                //if we were already within the yank threshold add a tiny buffer so we can still have a yank threshold:
+                Vector3 relative = _mainCamera.transform.InverseTransformPoint(inputDriver.motionSource.position);
+                if (relative.z <= minBodyDistance)
+                {
+                    _yankThreshold -= _minBodyDistanceBuffer;
+                }
+
                 StartDrag();
             }
         }
@@ -633,7 +686,9 @@ namespace MagicLeapTools
                     }
 
                     //find point on curve:
-                    Vector3 pointOnCurve = CurveUtilities.GetPoint(inputDriver.motionSource.position, _bendPredictionPoint, curveEndLocation, percentage);
+                    _curve.Update(inputDriver.motionSource.position, _bendPredictionPoint, curveEndLocation, lineResolution);
+                    Vector3 pointOnCurve = _curve.GetPosition(percentage);
+                    //Vector3 pointOnCurve = CurveUtilities.GetPointRaw(inputDriver.motionSource.position, _bendPredictionPoint, curveEndLocation, percentage);
 
                     //set line renderer position:
                     _lineRenderer.SetPosition(i, pointOnCurve);

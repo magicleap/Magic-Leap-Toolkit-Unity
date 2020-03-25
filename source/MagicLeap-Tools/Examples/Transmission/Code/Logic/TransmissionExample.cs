@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ public class TransmissionExample : MonoBehaviour
     private string _initialInfo;
 
     //Init:
-    private void Awake()
+    private void Start()
     {
         //hooks:
         controlLocator.OnTriggerDown.AddListener(HandleTriggerDown);
@@ -73,7 +73,7 @@ public class TransmissionExample : MonoBehaviour
     private void Update()
     {
         string output = _initialInfo + System.Environment.NewLine;
-        output += "Peers Available: " + Transmission.Peers.Length + System.Environment.NewLine;
+        output += "Peers Available: " + Transmission.Instance.Peers.Length + System.Environment.NewLine;
         
         //only show the score if we have a value for it:
         if (Transmission.HasGlobalFloat(GlobalScoreKey))
@@ -87,10 +87,15 @@ public class TransmissionExample : MonoBehaviour
     //GUI:
     private void OnGUI()
     {
+        if (!Application.isEditor)
+        {
+            return;
+        }
+
         //only used when testing with a connection between the editor and a headset:
         if (GUILayout.Button("Send Hello World"))
         {
-            SendHelloWorld ();
+            SendHelloWorld();
         }
 
         if (GUILayout.Button("Send RPC"))

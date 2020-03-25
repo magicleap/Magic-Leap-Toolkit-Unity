@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -74,16 +74,6 @@ namespace MagicLeapTools
         private void Update()
         {
             transform.localScale = Vector3.Lerp(transform.localScale, _targetScale, Time.deltaTime * animationSpeed);
-
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                ScaleUp();
-            }
-
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                ScaleDown();
-            }
         }
     }
 }

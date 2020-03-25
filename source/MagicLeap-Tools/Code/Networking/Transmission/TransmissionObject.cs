@@ -1,21 +1,22 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace MagicLeapTools
 {
     public class TransmissionObject : MonoBehaviour
     {
         //Public Variables:
-        [Tooltip("Optional local transform to observe for automatic synchronization to all known peers.")]
+        [Tooltip("Optional transform to observe for automatic synchronization to all known peers.")]
         public Transform motionSource;
         [Tooltip("Duration of lerp to new updates from the network.")]
         public float smoothTime = .04f;
@@ -28,8 +29,8 @@ namespace MagicLeapTools
         [HideInInspector] public string resourceFileName;
         [HideInInspector] public string creator;
         [HideInInspector] public string guid;
-        [HideInInspector] public Vector3 targetPosition;
-        [HideInInspector] public Quaternion targetRotation;
+        [HideInInspector] public Vector3 localPosition;
+        [HideInInspector] public Quaternion rotationOffset;
         [HideInInspector] public Vector3 targetScale;
 
         //Public Properties:
@@ -46,11 +47,6 @@ namespace MagicLeapTools
                 {
                     _initialOwnershipSet = true;
                     _isMine = value;
-
-                    if (_isMine)
-                    {
-                        StartCoroutine("ShareTransformStatus");
-                    }
                 }
                 else
                 {
@@ -76,17 +72,19 @@ namespace MagicLeapTools
         private Vector3 _previousScale;
         private static Dictionary<string, TransmissionObject> _all = new Dictionary<string, TransmissionObject>();
         private bool _isMine;
-        private Vector3 _positionaVelocity;
+        private Vector3 _positionVelocity;
         private Quaternion _rotationVelocity;
         private Vector3 _scaleVelocity;
         private bool _initialOwnershipSet;
+        private Vector3 _targetPosition;
+        private Quaternion _targetRotation;
 
         //Init:
         private void Awake()
         {
             //sets:
-            targetPosition = transform.localPosition;
-            targetRotation = transform.localRotation;
+            localPosition = TransformUtilities.LocalPosition(Transmission.Instance.sharedOrigin.position, Transmission.Instance.sharedOrigin.rotation, transform.position);
+            rotationOffset = TransformUtilities.GetRotationOffset(Transmission.Instance.sharedOrigin.rotation, transform.rotation);
             targetScale = transform.localScale;
 
             //catalog:
@@ -97,6 +95,8 @@ namespace MagicLeapTools
             Transmission.Instance.OnTransformSync.AddListener(HandleTransformSync);
             Transmission.Instance.OnOwnershipGained.AddListener(HandleOwnershipGained);
             Transmission.Instance.OnOwnershipTransferDenied.AddListener(HandleOwnershipTransferDenied);
+
+            StartCoroutine("ShareTransformStatus");
         }
 
         //Deint:
@@ -118,15 +118,19 @@ namespace MagicLeapTools
         }
 
         //Loops:
-        private void LateUpdate()
+        private void Update()
         {
             if (!_isMine)
             {
-                transform.localPosition = Vector3.SmoothDamp(transform.localPosition, targetPosition, ref _positionaVelocity, smoothTime);
-                transform.localRotation = MotionUtilities.SmoothDamp(transform.localRotation, targetRotation, ref _rotationVelocity, smoothTime);
+                transform.position = Vector3.SmoothDamp(transform.position, _targetPosition, ref _positionVelocity, smoothTime);
+                transform.rotation = MotionUtilities.SmoothDamp(transform.rotation, _targetRotation, ref _rotationVelocity, smoothTime);
                 transform.localScale = Vector3.SmoothDamp(transform.localScale, targetScale, ref _scaleVelocity, smoothTime);
             }
-            else
+        }
+
+        private void LateUpdate()
+        {
+            if (_isMine)
             {
                 //automatically follow motion source if set:
                 if (motionSource != null)
@@ -140,17 +144,47 @@ namespace MagicLeapTools
 
         //Public Methods:
         /// <summary>
+        /// Updates every TransmissionObject that we own to all peers to synchonize position, scale, and rotation.
+        /// </summary>
+        public static void SynchronizeAll()
+        {
+            foreach (var item in _all)
+            {
+                if (item.Value._isMine)
+                {
+                    item.Value.Synchronize();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates peers on the position, scale, and rotation of this transmission object.
+        /// </summary>
+        public void Synchronize()
+        {
+            if (_isMine)
+            {
+                //update relative:
+                localPosition = TransformUtilities.LocalPosition(Transmission.Instance.sharedOrigin.position, Transmission.Instance.sharedOrigin.rotation, transform.position);
+                rotationOffset = TransformUtilities.GetRotationOffset(Transmission.Instance.sharedOrigin.rotation, transform.rotation);
+
+                //send out the change to this transform:
+                Transmission.Send(new TransformSyncMessage(this));
+            }
+        }
+
+        /// <summary>
         /// Enables this GameObject and sychronizes this across all peers.
         /// </summary>
         public void Enable()
         {
-            //a disabled object has no active coroutines:
             if (_isMine && !gameObject.activeSelf)
             {
                 gameObject.SetActive(true);
-                StartCoroutine("ShareTransformStatus");
                 Transmission.Send(new OnEnabledMessage(guid));
             }
+
+            StartCoroutine("ShareTransformStatus");
         }
 
 
@@ -164,6 +198,8 @@ namespace MagicLeapTools
                 gameObject.SetActive(false);
                 Transmission.Send(new OnDisabledMessage(guid));
             }
+
+            StopCoroutine("ShareTransformStatus");
         }
 
         /// <summary>
@@ -198,38 +234,41 @@ namespace MagicLeapTools
         {
             while (true)
             {
-                bool dirty = false;
-
-                //position changed?
-                if (_previousPosition != transform.localPosition)
+                if (_isMine)
                 {
-                    _previousPosition = transform.localPosition;
-                    dirty = true;
+                    bool dirty = false;
+
+                    //position changed?
+                    if (_previousPosition != transform.position)
+                    {
+                        _previousPosition = transform.position;
+                        dirty = true;
+                    }
+
+                    //rotation changed?
+                    if (_previousRotation != transform.rotation)
+                    {
+                        _previousRotation = transform.rotation;
+                        dirty = true;
+                    }
+
+                    //scale changed?
+                    if (_previousScale != transform.localScale)
+                    {
+                        _previousScale = transform.localScale;
+                        dirty = true;
+                    }
+
+                    //something changed!
+                    if (dirty)
+                    {
+                        Synchronize();
+                    }
+
+                    //pace the looping based on frame rate chosen:
+                    yield return new WaitForSeconds(1 / sendFrameRate);
                 }
 
-                //rotation changed?
-                if (_previousRotation != transform.localRotation)
-                {
-                    _previousRotation = transform.localRotation;
-                    dirty = true;
-                }
-
-                //scale changed?
-                if (_previousScale != transform.localScale)
-                {
-                    _previousScale = transform.localScale;
-                    dirty = true;
-                }
-
-                //something changed!
-                if (dirty)
-                {
-                    //send out the change to this transform:
-                    Transmission.Send(new TransformSyncMessage(this));
-                }
-
-                //pace the looping based on frame rate chosen:
-                yield return new WaitForSeconds(1 / sendFrameRate);
                 yield return null;
             }
         }
@@ -249,11 +288,10 @@ namespace MagicLeapTools
             if (transmissionObject == this)
             {
                 _isMine = true;
-                StartCoroutine("ShareTransformStatus");
             }
         }
 
-        private void HandlePeerFound(string peer)
+        private void HandlePeerFound(string peer, long age)
         {
             //if we own this then share existence with new peer:
             if (_isMine)
@@ -261,6 +299,7 @@ namespace MagicLeapTools
                 Transmission.Instance.SpawnRecap(this, peer);
             }
         }
+
         private void HandleTransformSync(TransformSyncMessage transformSyncMessage)
         {
             //is this a pose message for us?
@@ -269,8 +308,11 @@ namespace MagicLeapTools
                 return;
             }
 
-            targetPosition = new Vector3((float)transformSyncMessage.px, (float)transformSyncMessage.py, (float)transformSyncMessage.pz);
-            targetRotation = new Quaternion((float)transformSyncMessage.rx, (float)transformSyncMessage.ry, (float)transformSyncMessage.rz, (float)transformSyncMessage.rw);
+            //unpack:
+            Vector3 receivedLocalPosition = new Vector3((float)transformSyncMessage.px, (float)transformSyncMessage.py, (float)transformSyncMessage.pz);
+            Quaternion receivedRotationOffset = new Quaternion((float)transformSyncMessage.rx, (float)transformSyncMessage.ry, (float)transformSyncMessage.rz, (float)transformSyncMessage.rw);
+            _targetPosition = TransformUtilities.WorldPosition(Transmission.Instance.sharedOrigin.position, Transmission.Instance.sharedOrigin.rotation, receivedLocalPosition);
+            _targetRotation = TransformUtilities.ApplyRotationOffset(Transmission.Instance.sharedOrigin.rotation, receivedRotationOffset);
             targetScale = new Vector3((float)transformSyncMessage.sx, (float)transformSyncMessage.sy, (float)transformSyncMessage.sz);
         }
     }

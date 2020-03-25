@@ -158,6 +158,9 @@ MonoBehaviour:
   bendyWeightMultiplier: 1
   bendPointPercentage: 0.9
   bendPredictionMultiplier: 14
+  allowYanking: 0
+  yankedDistance: 0.0889
+  minBodyDistance: 0.44
   allowReachStretching: 1
   reachStretchCurve:
     serializedVersion: 2
@@ -231,136 +234,85 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handedness: 0
   followControl: 0
-  OnControlConnected:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnControlDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTriggerPressBegan:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTriggerDown:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnDoubleTrigger:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTriggerUp:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTriggerPressEnded:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTriggerHold:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTriggerMove:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: MagicLeapTools.FloatEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  OnHomeButtonTap:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnDoubleHome:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnBumperDown:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnDoubleBumper:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnBumperUp:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnBumperHold:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTouchDown:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  OnDoubleTap:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  OnTouchUp:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  OnTouchMove:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: MagicLeapTools.Vector4Event, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  OnTouchRadialMove:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: MagicLeapTools.FloatEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  OnTouchHold:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnForceTouchDown:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnForceTouchUp:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTouchBeganMoving:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnSwipe:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: MagicLeapTools.TouchpadGestureDirectionEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnTapped:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: MagicLeapTools.TouchpadGestureDirectionEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  events:
+    OnControlConnected:
+      m_PersistentCalls:
+        m_Calls: []
+    OnControlDisconnected:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTriggerPressBegan:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTriggerDown:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDoubleTrigger:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTriggerUp:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTriggerPressEnded:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTriggerHold:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTriggerMove:
+      m_PersistentCalls:
+        m_Calls: []
+    OnHomeButtonTap:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDoubleHome:
+      m_PersistentCalls:
+        m_Calls: []
+    OnBumperDown:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDoubleBumper:
+      m_PersistentCalls:
+        m_Calls: []
+    OnBumperUp:
+      m_PersistentCalls:
+        m_Calls: []
+    OnBumperHold:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTouchDown:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDoubleTap:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTouchUp:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTouchMove:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTouchRadialMove:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTouchHold:
+      m_PersistentCalls:
+        m_Calls: []
+    OnForceTouchDown:
+      m_PersistentCalls:
+        m_Calls: []
+    OnForceTouchUp:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTouchBeganMoving:
+      m_PersistentCalls:
+        m_Calls: []
+    OnSwipe:
+      m_PersistentCalls:
+        m_Calls: []
+    OnTapped:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!114 &7235541112672725360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,39 +329,39 @@ MonoBehaviour:
   triggerDown:
     enabled: 1
     pattern: 1
-    instensity: 2
+    intensity: 0
   touchDown:
     enabled: 1
     pattern: 1
-    instensity: 1
+    intensity: 0
   touchUp:
     enabled: 1
     pattern: 1
-    instensity: 0
+    intensity: 0
   forceTouchDown:
     enabled: 1
     pattern: 6
-    instensity: 2
+    intensity: 0
   forceTouchUp:
     enabled: 1
     pattern: 7
-    instensity: 2
+    intensity: 0
   radialMove:
     enabled: 1
     pattern: 5
-    instensity: 0
+    intensity: 0
   triggerHold:
     enabled: 0
     pattern: 6
-    instensity: 2
+    intensity: 0
   bumperHold:
     enabled: 1
     pattern: 6
-    instensity: 2
+    intensity: 0
   touchHold:
     enabled: 1
     pattern: 6
-    instensity: 2
+    intensity: 0
 --- !u!114 &7235541112672725361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,7 +416,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215202950104563153}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000000018626451, y: 0.0000000037252903, z: 0.0022647486}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.015895355, y: 0.015895355, z: 0.015895355}
   m_Children: []
   m_Father: {fileID: 7235541112672725367}

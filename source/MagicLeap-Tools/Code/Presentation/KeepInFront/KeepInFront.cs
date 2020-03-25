@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
@@ -61,6 +61,13 @@ namespace MagicLeapTools
             _initialScale = transform.localScale;
             _updatedDestination = transform.position;
             OrientForward(Vector3.Normalize(_mainCamera.transform.position - transform.position));
+        }
+
+        //Flow:
+        private void OnEnable()
+        {
+            //refs:
+            _mainCamera = Camera.main;
         }
 
         //Deinit:

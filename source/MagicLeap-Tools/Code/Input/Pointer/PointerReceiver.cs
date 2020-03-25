@@ -1,14 +1,15 @@
 ﻿// ---------------------------------------------------------------------
 //
-// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2018-present, Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
-// here: https://id.magicleap.com/creator-terms
+// here: https://id.magicleap.com/terms/developer
 //
 // ---------------------------------------------------------------------
 
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace MagicLeapTools
 {
@@ -50,7 +51,6 @@ namespace MagicLeapTools
         private readonly float _defaultDrag = 10;
         private List<Pointer> _selectingPointers;
         private PursuitJoint _pursuitJoint;
-        
         private Vector3 _dragOffset;
         private Rigidbody _rigidBody;
         private Vector3 _previousDraggedAlongPosition;
