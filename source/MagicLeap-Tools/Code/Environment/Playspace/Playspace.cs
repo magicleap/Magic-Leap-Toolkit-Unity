@@ -83,7 +83,7 @@ namespace MagicLeapTools
         public Material ceilingMaterial;
         [Tooltip("How far behind a plotted wall should we look to find a physical wall.")]
         public float maxPlaneDepthTest = 1.524f;
-        [HideInInspector]public MLPersistentCoordinateFrames.PCF pcfAnchor;
+        [HideInInspector] public MLPersistentCoordinateFrames.PCF pcfAnchor;
 
         //Events:
         /// <summary>
@@ -119,6 +119,12 @@ namespace MagicLeapTools
 
                 return _instance;
             }
+        }
+
+        public bool Ready
+        {
+            get;
+            private set;
         }
 
         public State CurrentState
@@ -249,7 +255,8 @@ namespace MagicLeapTools
         private int _maxRestoreAttempts = 3;
         private float _restoreRetryDelay = 1;
         private Vector3 _playspaceCenter;
-        private bool _complete;
+        private Vector3 _cachedPrimaryWallGUIScale;
+
         //Init:
         private IEnumerator Start()
         {
@@ -257,6 +264,9 @@ namespace MagicLeapTools
 
             //refs:
             _camera = Camera.main.transform;
+
+            //sets:
+            _cachedPrimaryWallGUIScale = selectPrimaryWallGUI.transform.localScale;
 
             //features:
             MLPersistentCoordinateFrames.Start();
@@ -281,7 +291,7 @@ namespace MagicLeapTools
             {
                 _surfaceDetails = gameObject.AddComponent<SurfaceDetails>();
             }
-            
+
             if (runAtStart)
             {
                 Create();
@@ -291,7 +301,7 @@ namespace MagicLeapTools
         //Deinit:
         private void OnDestroy()
         {
-            if (MLPersistentCoordinateFrames.IsStarted) 
+            if (MLPersistentCoordinateFrames.IsStarted)
             {
                 MLPersistentCoordinateFrames.Stop();
             }
@@ -309,11 +319,21 @@ namespace MagicLeapTools
 
         //Public Methods:
         /// <summary>
-        /// Initiates the guided system for generating a playspace.
+        /// Forces a new Playspace creation from scratch.
+        /// </summary>
+        public void Rebuild()
+        {
+            PlayerPrefs.DeleteKey(_sessionDataKey);
+            PlayerPrefs.DeleteKey(_sessionMeshKey);
+            Create();
+        }
+
+        /// <summary>
+        /// Initiates the guided system for generating a Playspace.
         /// </summary>
         public void Create()
         {
-            _complete = false;
+            Ready = false;
 
             OnCleared?.Invoke();
 
@@ -337,7 +357,7 @@ namespace MagicLeapTools
             {
                 Destroy(FloorGeometry);
             }
-            
+
             //reload or create new:
             if (PlayerPrefs.HasKey(_sessionDataKey) && PlayerPrefs.HasKey(_sessionMeshKey))
             {
@@ -413,7 +433,7 @@ namespace MagicLeapTools
         private void FireOnUpdated()
         {
             //only fire this if we aren't in the middle of building a playspace:
-            if (!_complete)
+            if (Ready)
             {
                 OnUpdated?.Invoke();
             }
@@ -542,7 +562,7 @@ namespace MagicLeapTools
             _currentGUI = next;
             next.SetActive(true);
         }
-        
+
         private void HideGUI()
         {
             findFloorGUI.SetActive(false);
@@ -584,7 +604,7 @@ namespace MagicLeapTools
 
             //find and run state's enter:
             GetType().GetMethod(currentStateName + "_Enter", BindingFlags.Instance | BindingFlags.NonPublic)?.Invoke(this, null);
-            
+
             //find and run state's update:
             if (GetType().GetMethod(currentStateName + "_Update", BindingFlags.Instance | BindingFlags.NonPublic) != null)
             {
@@ -648,7 +668,7 @@ namespace MagicLeapTools
                 StartCoroutine("Restore_Relocalize", sessionData[0]);
             }
         }
-    
+
         private IEnumerator Restore_Relocalize(string pcfCFUID)
         {
             MagicLeapNativeBindings.MLCoordinateFrameUID cfuid = SerializationUtilities.StringToCFUID(pcfCFUID);
@@ -791,12 +811,14 @@ namespace MagicLeapTools
                     }
                 }
             }
-            
+
             //bounds:
             if (_plottedCorners.Count == 0)
             {
                 _plottedBounds = new Bounds(cornerLocation, Vector3.zero);
-            } else {
+            }
+            else
+            {
                 _plottedBounds.Encapsulate(cornerLocation);
             }
 
@@ -839,7 +861,7 @@ namespace MagicLeapTools
             //unhook:
             MLInput.OnTriggerDown -= DrawPerimeter_HandleTriggerDown;
         }
-        
+
         private void FindWalls_Enter()
         {
             //generate virtual walls:
@@ -999,8 +1021,8 @@ namespace MagicLeapTools
                     //corner - use intersection by creating inverted lines from each plane:
                     Vector3 point = Vector2.zero;
                     if (MathUtilities.RayIntersection(
-                        new Ray(_virtualWalls[clockwiseOrder[i]].plane.Center, _virtualWalls[clockwiseOrder[i]].plane.Rotation * Vector3.right), 
-                        new Ray(_virtualWalls[clockwiseOrder[next]].plane.Center, _virtualWalls[clockwiseOrder[next]].plane.Rotation * Vector3.left), 
+                        new Ray(_virtualWalls[clockwiseOrder[i]].plane.Center, _virtualWalls[clockwiseOrder[i]].plane.Rotation * Vector3.right),
+                        new Ray(_virtualWalls[clockwiseOrder[next]].plane.Center, _virtualWalls[clockwiseOrder[next]].plane.Rotation * Vector3.left),
                         ref point))
                     {
                         point.y = _roomFloorHeight;
@@ -1008,7 +1030,7 @@ namespace MagicLeapTools
                     }
                 }
             }
-            
+
             //close loop:
             _playspaceCorners.Add(_playspaceCorners[0]);
 
@@ -1058,7 +1080,7 @@ namespace MagicLeapTools
                 wallVerticies.Add(c);
                 wallVerticies.Add(b);
                 wallVerticies.Add(a);
-                
+
                 //store triangles
                 wallTriangles.Add(wallVerticies.Count - 4);
                 wallTriangles.Add(wallVerticies.Count - 3);
@@ -1089,7 +1111,7 @@ namespace MagicLeapTools
             //FindWalls_Analyze();
             ChangeState(State.ConfirmArea);
         }
-        
+
         private void ConfirmArea_Enter()
         {
             //gui:
@@ -1141,7 +1163,7 @@ namespace MagicLeapTools
             MLInput.OnControllerButtonDown += ConfirmArea_HandleControllerButton;
             MLInput.OnTriggerDown += ConfirmAreaReload_HandleTriggerDown;
         }
-        
+
         private void ConfirmAreaReload_HandleTriggerDown(byte controllerId, float triggerValue)
         {
             ChangeState(State.Complete);
@@ -1164,9 +1186,6 @@ namespace MagicLeapTools
 
         private IEnumerator ConfirmPrimaryWall_Update()
         {
-            //cache gui scale:
-            Vector3 cachedScale = selectPrimaryWallGUI.transform.localScale;
-
             while (true)
             {
                 Vector3 intersection = Vector3.zero;
@@ -1176,7 +1195,7 @@ namespace MagicLeapTools
                     //push gui back to wall and enlarge it:
                     intersection.y = selectPrimaryWallGUI.transform.position.y;
                     selectPrimaryWallGUI.transform.position = intersection;
-                    selectPrimaryWallGUI.transform.localScale = cachedScale * 2;
+                    selectPrimaryWallGUI.transform.localScale = _cachedPrimaryWallGUIScale * 2;
 
                     //match gui to normal of wall and then push it off the wall a bit to avoid clipping:
                     selectPrimaryWallGUI.transform.rotation = Quaternion.LookRotation(Walls[PrimaryWall].Back);
@@ -1187,7 +1206,7 @@ namespace MagicLeapTools
                     //put gui back in front of and facing the user:
                     selectPrimaryWallGUI.transform.localPosition = Vector3.zero;
                     selectPrimaryWallGUI.transform.localRotation = Quaternion.identity;
-                    selectPrimaryWallGUI.transform.localScale = cachedScale;
+                    selectPrimaryWallGUI.transform.localScale = _cachedPrimaryWallGUIScale;
                 }
                 yield return null;
             }
@@ -1212,7 +1231,7 @@ namespace MagicLeapTools
             {
                 finalBounds.Encapsulate(Walls[i].Center);
             }
-            
+
             //make center relative to pcf so relocalization keeps this value accurate:
             _playspaceCenter = TransformUtilities.LocalPosition(pcfAnchor.Position, pcfAnchor.Rotation, finalBounds.center);
 
@@ -1231,7 +1250,7 @@ namespace MagicLeapTools
                     {
                         angle += 360;
                     }
-                    
+
                     //get size:
                     float wallSize = Walls[i].width * Walls[i].height;
 
@@ -1273,7 +1292,7 @@ namespace MagicLeapTools
 
             //unhook:
             MLInput.OnTriggerDown -= ConfirmPrimaryWall_HandleTriggerDown;
-            
+
             //something went wrong with the shape of the room, best to force a rest:
             if (PrimaryWall == -1 || LeftWall == -1 || RightWall == -1 || RearWall == -1)
             {
@@ -1287,7 +1306,7 @@ namespace MagicLeapTools
 
         private void Complete_Enter()
         {
-            _complete = true;
+            Ready = true;
 
             //serialize session:
             string sessionData = "";
@@ -1302,14 +1321,14 @@ namespace MagicLeapTools
             PlayerPrefs.SetString(_sessionDataKey, sessionData);
             PlayerPrefs.SetString(_sessionMeshKey, _serializedMeshes);
             PlayerPrefs.Save();
-            
+
             OnCompleted?.Invoke();
 
             //clean up:
             HideGUI();
             RemovePlottedBounds();
             RemoveDebugLines();
-            
+
             ChangeState(State.Idle);
         }
 #endif
