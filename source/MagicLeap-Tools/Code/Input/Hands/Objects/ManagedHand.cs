@@ -59,7 +59,10 @@ namespace MagicLeapTools
             Hand = hand;
             Skeleton = new ManagedHandSkeleton(this);
             Gesture = new ManagedHandGesture(this);
-            Collider = new ManagedHandCollider(this);
+            if(handInput != null)
+            {
+                Collider = new ManagedHandCollider(this);
+            }
         }
 
         //Public Methods:
@@ -79,7 +82,10 @@ namespace MagicLeapTools
 
             Skeleton.Update();
             Gesture.Update();
-            Collider.Update(_handInput.palmCollisions);
+            if(_handInput != null)
+            {
+                Collider.Update(_handInput.palmCollisions);
+            }
         }
 #endif
     }
