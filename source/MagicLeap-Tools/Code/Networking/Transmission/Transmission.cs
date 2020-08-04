@@ -28,13 +28,6 @@ namespace MagicLeapTools
     /// </summary>
     public class Transmission : MonoBehaviour
     {
-        public Transform pcf;
-
-        private void LateUpdate()
-        {
-            pcf.SetPositionAndRotation(sharedOrigin.position, sharedOrigin.rotation);
-        }
-
         //Public Variables:
         public int port = 23000;
         public int bufferSize = 1024;

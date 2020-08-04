@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using UnityEngine.XR.MagicLeap;
+using System.Linq;
 
 namespace MagicLeapTools
 {
@@ -44,8 +45,8 @@ namespace MagicLeapTools
             bool hitMesh = false;
             for (int i = 0; i < hits.Length; i++)
             {
-                string[] nameSplit = hits[i].transform.name.Split('-');
-                if (nameSplit.Length == 2 && nameSplit[0].Contains("Mesh "))
+                //is this spatial mesh?
+                if (_spatialMapper.meshIdToGameObjectMap.Values.Contains(hits[i].collider.gameObject))
                 {
                     hitMesh = true;
                     break;
